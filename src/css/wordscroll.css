@@ -13,8 +13,8 @@ html {
   --font-size: 3rem;
   --line-height: 1.2;
   --num-words: 6; /* Updated to include the extra "trust" */
-  --animation-duration: 6.5s; /* Adjusted duration for the additional word */
-  --blue: #6f63d3;
+  --animation-duration: 7.5s; /* Adjusted duration for the additional word */
+  --blue: #535FD7
 }
 
 .rotating-text {
