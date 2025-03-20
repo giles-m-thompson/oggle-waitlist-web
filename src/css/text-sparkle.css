@@ -38,8 +38,8 @@
     -webkit-text-fill-color: transparent;
     -ms-text-fill-color: transparent;
     -moz-text-fill-color: transparent;
-    animation: masked 5s linear infinite, fadeInDown 1.5s both ;
+    animation: masked 65s linear infinite, fadeInDown 1.5s both ;
     -webkit-animation: masked 65s linear infinite, fadeInDown 1.5s both 1;
-    -moz-animation:masked 5s linear infinite, fadeInDown 1.5s both 1;
-    -o-animation: masked 5s linear infinite, fadeInDown 1.5s both 1;
+    -moz-animation:masked 65s linear infinite, fadeInDown 1.5s both 1;
+    -o-animation: masked 65s linear infinite, fadeInDown 1.5s both 1;
   }
