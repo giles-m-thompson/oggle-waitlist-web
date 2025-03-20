@@ -1,0 +1,78 @@
+/* Get Inter Font */
+@import url("https://rsms.me/inter/inter.css");
+html {
+  font-family: "Inter", sans-serif;
+}
+@supports (font-variation-settings: normal) {
+  html {
+    font-family: "Inter var experimental", sans-serif;
+  }
+}
+
+:root {
+  --font-size: 3rem;
+  --line-height: 1.2;
+  --num-words: 6; /* Updated to include the extra "trust" */
+  --animation-duration: 6.5s; /* Adjusted duration for the additional word */
+  --blue: #6f63d3;
+}
+
+.rotating-text {
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+}
+
+.window {
+  display: inline-block;
+  position: relative;
+  margin-top: -15px;
+  top: 20px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  flex-grow: 1; /* Allows .window to grow and take up remaining space */
+  height: calc(var(--font-size) * var(--line-height));
+  vertical-align: bottom;
+}
+
+.window-inner {
+  display: inline-block;
+  animation: scroll-text var(--animation-duration) ease-in-out infinite;
+  color: var(--blue);
+}
+.window span {
+  display: block;
+  height: 60px;
+}
+
+@keyframes scroll-text {
+  0% {
+    transform: translateY(0%); /* trust */
+   
+  }
+  16.66% {
+    transform: translateY(calc(-16.66%)); /* loyalty */
+  }
+  33.33% {
+    transform: translateY(calc(-33.33%)); /* respect */
+  }
+  50% {
+    transform: translateY(calc(-50%)); /* value */
+  }
+  66.66% {
+    transform: translateY(calc(-66.66%)); /* referrals */
+  }
+  83.33% {
+    transform: translateY(calc(-83.33%)); /* trust (at the end) */
+  }
+  100% {
+    transform: translateY(calc(-83.33%)); /* trust (at the end) */
+  }
+}
+
+
+
+
+
+.nowrap {
+  white-space: nowrap;
+}

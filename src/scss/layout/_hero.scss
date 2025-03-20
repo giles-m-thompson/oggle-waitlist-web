@@ -58,12 +58,13 @@
 
 .hero-media-image {
 	margin: 0 auto;
+	position: relative;
 	box-shadow: 48px 16px 48px rgba(color(bg, 1i), .12);
 	border-radius: 4px;
 	transform: perspective(1000px) rotateY(16deg) rotateX(2deg) rotateZ(-7deg) scaleY(.95) translatex(2%);
     height: 300px;
 	.lights-off & {
-		box-shadow: 18px -6px 48px rgba(255,255,255, 0.45);
+		box-shadow: 1px -6px 48px rgba(255,255,255, 0.85);
 	}
 }
 
