@@ -102,7 +102,7 @@
       function (e) {
         moveObjects(e, movingObjects)
       },
-      150
+      50
     ))
   }
 

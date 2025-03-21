@@ -12,6 +12,10 @@
     margin-bottom: 32px;
 }
 
+.hero-paragraph span {
+	font-family: 'Courier New', Courier, monospace;
+}
+
 .hero-cta {
 	max-width: 400px;
 	margin-left: auto;
@@ -63,10 +67,11 @@
 	border-radius: 4px;
 	transform: perspective(1000px) rotateY(16deg) rotateX(2deg) rotateZ(-7deg) scaleY(.95) translatex(2%);
     height: 300px;
-	
 	transition: transform 2s ease-in-out;
 	.lights-off & {
-		box-shadow: 1px -6px 48px rgba(255,255,255, 0.85);
+		box-shadow: 1px -6px 48px rgba(255,255,255, 0.85); 
+		
+		
 	}
 }
 
@@ -153,4 +158,14 @@
 		width: 1440px;
 		height: 324px;
 	}
+
+	/* Keyframes to animate the box-shadow */
+
 }
+
+
+
+
+
+
+
