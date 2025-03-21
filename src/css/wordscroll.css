@@ -26,19 +26,22 @@ html {
   display: inline-block;
   position: relative;
   margin-top: -15px;
-  top: 20px;
+  top: -4px;
   border-radius: 0.5rem;
   overflow: hidden;
   flex-grow: 1; /* Allows .window to grow and take up remaining space */
-  height: calc(var(--font-size) * var(--line-height));
+  height: calc(var(--font-size) * var(--line-height) - 25px);
   vertical-align: bottom;
+  padding-bottom: -10px;
 }
 
 .window-inner {
   display: inline-block;
   animation: scroll-text var(--animation-duration) ease-in-out infinite;
   color: var(--blue);
+
 }
+
 .window span {
   display: block;
   height: 60px;
