@@ -63,6 +63,7 @@
 
   // Move Objects
   function moveObjects(e, object) {
+    console.log("moving")
     mouseX = e.pageX;
     mouseY = e.pageY;
     scrollY = win.scrollY;
