@@ -11,5 +11,9 @@
   "devDependencies": {
     "sass-embedded": "^1.86.0",
     "vite": "^6.2.0"
+  },
+  "dependencies": {
+    "@babylonjs/core": "^7.54.0",
+    "@babylonjs/loaders": "^7.54.0"
   }
 }

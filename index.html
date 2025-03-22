@@ -89,14 +89,8 @@
 							<div class="container-sm">
 								<h2 class="section-title mt-0">Live Demo</h2>
 	                            <p class="section-paragraph"><span><b>Oggle</b><sup>&#174;</sup></span> has been built from the ground up to be <b>super simple</b> an intuitive to use, easily customize 3D mock device screen content, colours, scaling, etc on the fly.  </p>
-								<div class="features-image">
-									<img class="features-illustration asset-dark" src="src/images/features-illustration-dark.svg" alt="Feature illustration">
-									<img class="features-box asset-dark" src="src/images/features-box-dark.svg" alt="Feature box">
-									<img class="features-illustration asset-dark" src="src/images/features-illustration-top-dark.svg" alt="Feature illustration top">
-									<img class="features-illustration asset-light" src="src/images/features-illustration-light.svg" alt="Feature illustration">
-									<img class="features-box asset-light" src="src/images/features-box-light.svg" alt="Feature box">
-									<img class="features-illustration asset-light" src="src/images/features-illustration-top-light.svg" alt="Feature illustration top">
-								</div>
+								
+                                <div id="o3d-demo-container"></div>
 							</div>
                         </div>
                         <div class="features-wrap">
@@ -162,7 +156,7 @@
                     <div class="brand footer-brand">
                         <a href="#">
 							<img class="asset-light" src="src/images/logo-light.svg" alt="Logo">
-							<img class="asset-dark" src="src/images/logo-dark.svg" alt="Logo">
+                            <img class="asset-dark" src="src/images/oggle-letter-o-logo-transparent.png" style="height:50px" alt="Logo">
                         </a>
                     </div>
                     <ul class="footer-links list-reset">
@@ -211,6 +205,21 @@
         </footer>
     </div>
     <script type="module" src="/src/js/main.js"></script>
+
+    <script type="module">
+
+        //import the Oggle 3D Editor Demo
+        import {Oggle3dEditorDemo} from '/src/Oggle3dEditorDemo.js'
+
+        //specify engine render target..
+        const o3dEditorEngineDemoParentEle = "o3d-demo-container";
+
+        //instantiate and initialise the demo.
+        const oggle3dEditorDemo = new Oggle3dEditorDemo(o3dEditorEngineDemoParentEle);
+        oggle3dEditorDemo.initialise();
+       
+
+    </script>
    
 </body>
 </html>

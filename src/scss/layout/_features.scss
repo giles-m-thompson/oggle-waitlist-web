@@ -65,6 +65,23 @@
 	}
 }
 
+.section-paragraph span b{
+	font-family: "IBM Plex Sans", sans-serif;
+}
+
+#o3d-demo-container{
+	position: relative;
+}
+
+#oggle-3d-editor-rendering-viewport-canvas{
+	width: 700px; /* Set your custom width */
+    height: 800px; /* Set your custom height */
+    aspect-ratio: unset; /* Disable aspect ratio */
+}
+
+
+
+
 @include media( '>medium' ) {
 
 	.features {
@@ -79,9 +96,7 @@
 			padding-right: 72px;
 		}
 
-		.section-paragraph span b{
-			font-family: "IBM Plex Sans", sans-serif;
-		}
+		
 
 		&::before {
 			content: '';
