@@ -1,6 +1,8 @@
 import * as BABYLON from '@babylonjs/core';
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/core/Materials/Textures/Loaders/envTextureLoader";
+import axios from "axios";
+import {DeviceMesh} from '../engine/meshes/DeviceMesh'
 import { LogManager } from '../logging/LogManager';
 import { Level } from '../logging/Level';
 
@@ -169,8 +171,9 @@ class EngineManager {
         const camera = new BABYLON.ArcRotateCamera(
             "camera",
             Math.PI / 2,
-            (this.topShadowingEnabled) ? (Math.PI / 2) - 0.10 : Math.PI / 2, 
-            2.8,
+            //(this.topShadowingEnabled) ? (Math.PI / 2) - 0.10 : Math.PI / 2, 
+            Math.PI / 2 - 0.05,
+            1.345,
             BABYLON.Vector3.Zero(),
             this.scene);
         
@@ -235,33 +238,17 @@ class EngineManager {
         return pipeline;
     }
 
-    #attachWindowResizeListener() {
-        const self = this;
-        window.addEventListener('resize', (e) => {
-            self.canvas.width = window.innerWidth;
-            self.canvas.height = window.innerHeight;
-            self.engine.resize();
-        })
-    }
 
     #setupSceneReadyHandler() {
 
-        const self = this;
-        this.scene.executeWhenReady(function () {
+        this.scene.executeWhenReady(() => {
 
             //start main render loop
-            self.#startRenderLoop();
+            this.#startRenderLoop();
 
-            const box = BABYLON.MeshBuilder.CreateBox("box", {height: 2, width: 0.75, depth: 0.25},this.scene);
-
-            const pbrMaterial = new BABYLON.PBRMaterial("pbr", this.scene);
-
-pbrMaterial.metallic = 0.5;  // Adjust metallic factor
-pbrMaterial.roughness = 0.3; // Adjust roughness factor
-
-  box.material = pbrMaterial;
-
-            
+            //load demo device mesh
+            this.#loadDemoDeviceMesh();
+                
 
         });
 
@@ -594,6 +581,87 @@ pbrMaterial.roughness = 0.3; // Adjust roughness factor
         }
 
         return this.#locateRootMesh(aMesh.parent);
+    }
+
+    #loadDemoDeviceMesh(){
+
+        //const DEMO_DEVICE_MESH_URL = "https://thompsonlabs.bitbucket.io/test-meshes/iphone-14-pro.glb";
+        const DEMO_DEVICE_MESH_URL = "https://thompsonlabs.bitbucket.io/test-meshes/iphone-13-pro-max.glb"
+
+        this.#dispatchBinaryGetRequest(DEMO_DEVICE_MESH_URL)
+                    .then((resourceBlob) => {
+
+                        //create blob URL from the returned (IPHONE-14) blob.
+                        const resourceBlobURL = URL.createObjectURL(resourceBlob);
+
+                        //known device metadata (extracted from the a JSON device definition in full app)
+                        const deviceMetaData = {
+                            "id": "iphone-14-pro",
+                            "assetId": "1234",
+                            "name": "iphone-14-pro#1",
+                            "type": "Device",
+                            "bodySubmeshName": "iPhone 14 pro_primitive1",
+                            "bodyMaterialName": "iphone 14",
+                            "screenSubmeshName": "iPhone 14 pro_primitive2",
+                            "screenMaterialName": "screen",
+                            "additionalScreenSubmeshes": [],
+                            "bodyColour": "default",
+                            "screenTextureURL": "default",
+                            "topLevelModelMeshName": "default",
+                        }
+
+                        
+                        
+                        //use the blob URL to instantiate & init a new DeviceMesh instance
+                        //NOTE: We pass in KNOWN metadata parameters specific to this particular IPhone-14 mesh
+                        const demoDeviceMesh = new DeviceMesh(
+                            this.scene,
+                            deviceMetaData.name,
+                            resourceBlobURL,
+                            deviceMetaData.bodySubmeshName,
+                            deviceMetaData.bodyMaterialName,
+                            deviceMetaData.screenSubmeshName,
+                            deviceMetaData.screenMaterialName,
+                            deviceMetaData.additionalScreenSubmeshes,
+                            deviceMetaData.topLevelModelMeshName,
+                            deviceMetaData.bodyColour,
+                            deviceMetaData.screenTextureURL
+                        );
+
+                        demoDeviceMesh.initialise()
+                                      .then((loadedmesh) => {
+
+                                        //loadedmesh.parentMesh.position.y = -1;
+
+
+                                      });
+
+                        
+
+                        
+                    })
+                    .catch((error) => {
+                        LogManager.getInstance().logAll(Level.ERROR, "An error occurred whilst attempting to load demo device mesh ", error)
+                        throw error
+                    })
+
+                    
+    }
+
+    #dispatchBinaryGetRequest(aURL) {
+
+        return axios.get(aURL,{ responseType: 'arraybuffer' })
+            .then((response) => {
+                const blob = new Blob([response.data], {
+                    type: 'model/gltf-binary',
+                });
+                return blob;
+            })
+            .catch((error) => {
+                // handle error
+                LogManager.getInstance().log(Level.ERROR, "An error occurred whilst undertaking (binary) GET request",error);
+                throw error;
+            })
     }
 
 
