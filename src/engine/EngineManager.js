@@ -165,23 +165,22 @@ class EngineManager {
 
     #setupMainCamera() {
 
-        /*
+        
         const camera = new BABYLON.ArcRotateCamera(
             "camera",
             Math.PI / 2,
             (this.topShadowingEnabled) ? (Math.PI / 2) - 0.10 : Math.PI / 2, 
-            3.5,
+            2.8,
             BABYLON.Vector3.Zero(),
             this.scene);
-        */
-        const camera = new BABYLON.ArcRotateCamera("camera", 3 * Math.PI / 4, Math.PI / 4, 4, BABYLON.Vector3.Zero(), this.scene);
+        
+        //const camera = new BABYLON.ArcRotateCamera("camera", 3 * Math.PI / 4, Math.PI / 4, 4, BABYLON.Vector3.Zero(), this.scene);
         camera.setTarget(BABYLON.Vector3.Zero()); // This targets the camera to scene origin
         camera.lowerBetaLimit = -Math.PI / 264;   // Set the lower vertical rotation limit (to look straight up)
         camera.upperBetaLimit = Math.PI           // Set the upper vertical rotation limit (to look straight down)
-        camera.wheelDeltaPercentage = 0.01;
+        camera.wheelDeltaPercentage = 0.00000000001;
         camera.minZ = 0.1
         camera.attachControl(this.canvas, true);
-
         LogManager.getInstance().log(Level.DEBUG, camera);
         return camera
     }

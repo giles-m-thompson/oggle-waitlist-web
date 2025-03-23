@@ -74,9 +74,10 @@
 }
 
 #oggle-3d-editor-rendering-viewport-canvas{
-	width: 700px; /* Set your custom width */
-    height: 800px; /* Set your custom height */
-    aspect-ratio: unset; /* Disable aspect ratio */
+	width: 700px;
+    height: 800px;
+    aspect-ratio: unset;
+	outline: none;   
 }
 
 

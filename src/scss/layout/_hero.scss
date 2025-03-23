@@ -65,14 +65,14 @@
 	position: relative;
 	box-shadow: 48px 16px 48px rgba(color(bg, 1i), .12);
 	border-radius: 4px;
+	transition: transform 1s ease-in-out;
+	animation: rotateBoxShadow 3s linear infinite !important; 
 	transform: perspective(1000px) rotateY(16deg) rotateX(2deg) rotateZ(-7deg) scaleY(.95) translatex(2%);
     height: 300px;
-	transition: transform 2s ease-in-out;
-	.lights-off & {
-		box-shadow: 1px -6px 48px rgba(255,255,255, 0.85); 
-		
-		
-	}
+}
+
+.lights-off .hero-media-image {
+	box-shadow: 1px -6px 48px rgba(255, 255, 255, 0.85);
 }
 
 @include media( '<medium' ) {
@@ -162,6 +162,49 @@
 	/* Keyframes to animate the box-shadow */
 
 }
+
+@keyframes flashBoxShadow {
+	0% {
+	  box-shadow: 1px -6px 48px rgba(255, 255, 255, 0.535);
+	}
+	50% {
+	  box-shadow:  1px -6px 48px rgba(255, 255, 255, 0.85);
+	}
+	100% {
+		box-shadow: 1px -6px 48px rgba(255, 255, 255, 0.535);
+	}
+  }
+
+  @-webkit-keyframes flashBoxShadow {
+	0% {
+		box-shadow:  1px -6px 48px rgba(255, 255, 255, 0.12);
+	  }
+	  50% {
+		box-shadow:  1px -6px 48px rgba(255, 255, 255, 0.85);
+	  }
+	  100% {
+		box-shadow:  1px -6px 48px rgba(255, 255, 255, 0.12);
+	  }
+  }
+
+
+  @keyframes rotateBoxShadow {
+	0% {
+	  box-shadow: 1px -6px 48px rgba(255, 255, 255, 0.85);
+	}
+	25% {
+	  box-shadow: 6px 1px 48px rgba(255, 255, 255, 0.85);
+	}
+	50% {
+	  box-shadow: 1px 6px 48px rgba(255, 255, 255, 0.85);
+	}
+	75% {
+	  box-shadow: -6px 1px 48px rgba(255, 255, 255, 0.85);
+	}
+	100% {
+	  box-shadow: 1px -6px 48px rgba(255, 255, 255, 0.85);
+	}
+  }
 
 
 
