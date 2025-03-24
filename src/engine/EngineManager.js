@@ -109,7 +109,9 @@ class EngineManager {
         //the use to dynamically drag and drop images or videos to a devices screen.
         this.#setupDeviceMeshDragAndDrop();
 
-     
+        //setup mesh selection handler
+        this.#setupMeshSelectionHandler();
+
         //attach engine to the scene so its globally available
         //TODO: Remove this logic, an external code that requires access to the 
         //      underlying engine should obtain it via this EngineManager class.
@@ -206,10 +208,11 @@ class EngineManager {
 
     #setupSceneHdrIBLEnvTexture(aLevel) {
         
-        const hdrTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("./src/engine/envtextures/hard-light.env", this.scene);
+        const hdrTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("./src/engine/envtextures/studio_small_06_1k.env", this.scene);
         hdrTexture.level = aLevel
         hdrTexture.gammaSpace = true;
-        hdrTexture.rotationY = BABYLON.Tools.ToRadians(90); 
+        hdrTexture.rotationY = BABYLON.Tools.ToRadians(340); 
+        //hdrTexture.rotationY = BABYLON.Tools.ToRadians(45);
         hdrTexture.anisotropicFilteringLevel = 64;
         this.scene.environmentTexture = hdrTexture;
 
@@ -638,6 +641,10 @@ class EngineManager {
                                        //start rotation animation
                                        this.#animateDemoDeviceMesh(loadedmesh.parentMesh);
 
+                                       //enhance model look for the current environment
+                                       this.#enhanceDemoMeshVisualFidelity(loadedmesh);
+                                       
+
                                       });
 
                         
@@ -683,6 +690,46 @@ class EngineManager {
 
     }
 
+    /*
+      
+     */
+    #enhanceDemoMeshVisualFidelity(mesh){
+        
+        
+        /**
+         * What follows are series of demo-device specific configuration settings that
+         * together improve the final render of the device by compensating for the
+         * super harsh studio lighting applied to the PBR Materials in the scene via
+         * the assigned IBL environment texture.
+         */
+       
+
+        //adjust the material properties of the main deice screen, here we essentially
+        //reduce the reflectivity and glare of the screen.
+        const screenMaterialName = mesh.getScreenMaterialName();
+        const screenMaterial = this.scene.getMaterialById(screenMaterialName);
+        screenMaterial.metallic = 0.3;
+        screenMaterial.roughness = 0.8;
+        screenMaterial.specularIntensity = 1;
+        screenMaterial.reflectionColor = new BABYLON.Color3(0.5, 0.5, 0.5); 
+
+        //reduce reflectivity on the body material
+        const bodyMaterial = this.scene.getMaterialByName(mesh.getBodyMaterialName());
+        bodyMaterial.reflectionColor = new BABYLON.Color3(0.7, 0.7, 0.7); 
+
+        //disable the device's, additional highly reflective screen
+        const screenGlassMesh = this.scene.getMeshByName("Object_43");
+        console.log(screenGlassMesh.material)
+        screenGlassMesh.setEnabled(false);
+
+        //increase the opacity and reflectivity of the camera lens glass
+        const cameraGlass  = this.scene.getMaterialByName("Camera_Glass");
+        cameraGlass.alpha = 0.3;
+        cameraGlass.roughness = 0.3
+    
+
+    }
+
     #dispatchBinaryGetRequest(aURL) {
 
         return axios.get(aURL,{ responseType: 'arraybuffer' })
@@ -698,6 +745,22 @@ class EngineManager {
                 throw error;
             })
     }
+
+    #setupMeshSelectionHandler(){
+
+        // Register a pointer event to detect picking
+        this.scene.onPointerDown = function (evt, pickInfo) {
+            if (pickInfo.hit) {
+                // pickInfo.pickedMesh contains the mesh that was picked
+                console.log("Picked Mesh: ", pickInfo.pickedMesh);
+            }else{
+                console.log("no hit");
+            }
+        };
+
+    }
+
+    
 
 
 }

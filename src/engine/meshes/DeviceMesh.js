@@ -160,6 +160,22 @@ class DeviceMesh extends O3DMesh{
        .albedoTexture
        .video
     }
+
+    getScreenSubmeshName(){
+        return this.screenSubmeshName;
+    }
+
+    getScreenMaterialName(){
+        return this.screenMaterialName;
+    }
+
+    getBodySubmeshName(){
+        return this.bodySubmeshName;
+    }
+
+    getBodyMaterialName(){
+        return this.bodyMaterialName;
+    }
     
     /**
      * Updates the body colour of the device mesh to the specified 
