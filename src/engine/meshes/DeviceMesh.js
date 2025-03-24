@@ -612,6 +612,15 @@ class DeviceMesh extends O3DMesh{
         return this.scene.getMeshByName(aName);
     }
 
+    #setScreenUnlit(){
+
+        const screenMaterial = this.scene.getMaterialById(this.screenMaterialName);
+        screenMaterial.albedoTexture.unlit = true;
+        screenMaterial.diffuseColor = new BABYLON.Color3(1.5, 1.5, 1.5);
+        console.log(screenMaterial.albedoTexture)
+
+    }
+
     #detectMediaMimeTypeFromURL(aMediaURL,staticTest) {
 
 
@@ -791,6 +800,9 @@ class DeviceMesh extends O3DMesh{
         //generate an array of the entire meshes hierarchy, ordered by size, this will allow us
         //to selectively disable the rendering internal smaller meshes as necessary.
         this.meshHierarchyInSizeOrder = this.#orderMeshHierarchyBySize(this.parentMesh);
+
+        //unlight default screen texture
+        this.#setScreenUnlit();
 
 
         //return reference to this class instance where the mesh was successfully imported.

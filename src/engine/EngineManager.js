@@ -172,8 +172,8 @@ class EngineManager {
             "camera",
             Math.PI / 2,
             //(this.topShadowingEnabled) ? (Math.PI / 2) - 0.10 : Math.PI / 2, 
-            Math.PI / 2 - 0.05,
-            1.345,
+            Math.PI / 2,
+            1.48,
             BABYLON.Vector3.Zero(),
             this.scene);
         
@@ -633,8 +633,10 @@ class EngineManager {
                         demoDeviceMesh.initialise()
                                       .then((loadedmesh) => {
 
-                                        //loadedmesh.parentMesh.position.y = -1;
-                                       // loadedmesh.parentMesh.scaling = new BABYLON.Vector3(1, 1, 1);
+                                       loadedmesh.parentMesh.rotation.y = Math.PI;
+
+                                       //start rotation animation
+                                       this.#animateDemoDeviceMesh(loadedmesh.parentMesh);
 
                                       });
 
@@ -646,6 +648,39 @@ class EngineManager {
                     })
 
                     
+    }
+
+    #animateDemoDeviceMesh(mesh){
+
+        // Assuming 'mesh' is your mesh object
+        var rotationAnimation = new BABYLON.Animation("rotateAnimation",
+            "rotation.y",   // We are animating the Y axis rotation
+            15,             // 30 frames per second
+            BABYLON.Animation.ANIMATIONTYPE_FLOAT, // Animation type is Float (for a single axis)
+            BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE // Looping mode
+        );
+
+        // Keyframes array (frame number, value for Y rotation)
+        var keyframes = [
+            { frame: 0, value: 0 },             // Start at 0 radians
+            { frame: 30, value: Math.PI / 2 },   // Rotate to π/2 radians (90 degrees) at frame 60 (2 seconds in)
+            { frame: 60, value: Math.PI },      // Rotate to π radians (180 degrees) at frame 120 (4 seconds in)
+            { frame: 90, value: 3 * Math.PI / 2 }, // Rotate to 3π/2 radians (270 degrees) at frame 180 (6 seconds in)
+            { frame: 120, value: 2 * Math.PI }   // Complete the full rotation at 2π radians (360 degrees) at frame 240 (8 seconds in)
+        ];
+
+    
+
+        // Add keyframes to the animation
+        rotationAnimation.setKeys(keyframes);
+
+        // Append the animation to the mesh
+        mesh.animations.push(rotationAnimation);
+
+        // Start the animation
+        this.scene.beginAnimation(mesh, 0, 120, true); // Loop animation from frame 0 to frame 120
+
+
     }
 
     #dispatchBinaryGetRequest(aURL) {
