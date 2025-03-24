@@ -69,7 +69,7 @@ class EngineManager {
         this.scene = new BABYLON.Scene(this.engine);
         this.scene.useRightHandedSystem = true; //NB: Critical for GLTF Models as they use right-hand co-ordinates.
         this.scene.shadowsEnabled = true;
-        this.scene.clearColor = new BABYLON.Color4(0, 0, 0, 0);
+        this.scene.clearColor = new BABYLON.Color4(0, 0, 0, 0);  //for transparent scene background, note the 0 alpha value
         this.scene.getEngine().setHardwareScalingLevel(1 / window.devicePixelRatio);
         
 
@@ -88,7 +88,7 @@ class EngineManager {
         //this.scenePlane = this.#setupScenePlane(); //set from fixed default values, this may be later overridden by template/scene specific customisations.
 
         //setup scene HDR IBL texture
-        const sceneHdrTexture = this.#setupSceneHdrIBLEnvTexture(1.5);
+        const sceneHdrTexture = this.#setupSceneHdrIBLEnvTexture(0.4);
 
         const pipeline = this.#setupRenderingPipeline();
 
@@ -209,6 +209,7 @@ class EngineManager {
         const hdrTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("./src/engine/envtextures/hard-light.env", this.scene);
         hdrTexture.level = aLevel
         hdrTexture.gammaSpace = true;
+        hdrTexture.rotationY = BABYLON.Tools.ToRadians(90); 
         hdrTexture.anisotropicFilteringLevel = 64;
         this.scene.environmentTexture = hdrTexture;
 
@@ -586,7 +587,7 @@ class EngineManager {
     #loadDemoDeviceMesh(){
 
         //const DEMO_DEVICE_MESH_URL = "https://thompsonlabs.bitbucket.io/test-meshes/iphone-14-pro.glb";
-        const DEMO_DEVICE_MESH_URL = "https://thompsonlabs.bitbucket.io/test-meshes/iphone-13-pro-max.glb"
+        const DEMO_DEVICE_MESH_URL = "https://thompsonlabs.bitbucket.io/test-meshes/iphone-13-pro-max-tagged.glb"
 
         this.#dispatchBinaryGetRequest(DEMO_DEVICE_MESH_URL)
                     .then((resourceBlob) => {
@@ -594,16 +595,16 @@ class EngineManager {
                         //create blob URL from the returned (IPHONE-14) blob.
                         const resourceBlobURL = URL.createObjectURL(resourceBlob);
 
-                        //known device metadata (extracted from the a JSON device definition in full app)
+                        //known device metadata
                         const deviceMetaData = {
                             "id": "iphone-14-pro",
                             "assetId": "1234",
                             "name": "iphone-14-pro#1",
                             "type": "Device",
-                            "bodySubmeshName": "iPhone 14 pro_primitive1",
-                            "bodyMaterialName": "iphone 14",
-                            "screenSubmeshName": "iPhone 14 pro_primitive2",
-                            "screenMaterialName": "screen",
+                            "bodySubmeshName": "Body_Body_0_12",
+                            "bodyMaterialName": "Body",
+                            "screenSubmeshName": "Object_25",
+                            "screenMaterialName": "Wallpaper",
                             "additionalScreenSubmeshes": [],
                             "bodyColour": "default",
                             "screenTextureURL": "default",
@@ -628,15 +629,14 @@ class EngineManager {
                             deviceMetaData.screenTextureURL
                         );
 
+                        //initialise the device mesh and undertake any initial config..
                         demoDeviceMesh.initialise()
                                       .then((loadedmesh) => {
 
                                         //loadedmesh.parentMesh.position.y = -1;
-
+                                       // loadedmesh.parentMesh.scaling = new BABYLON.Vector3(1, 1, 1);
 
                                       });
-
-                        
 
                         
                     })
