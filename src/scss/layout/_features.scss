@@ -74,10 +74,12 @@
 }
 
 #oggle-3d-editor-rendering-viewport-canvas{
+	position: relative;
 	width: 700px;
     height: 800px;
     aspect-ratio: unset;
 	outline: none;   
+	top: -45px;
 }
 
 
