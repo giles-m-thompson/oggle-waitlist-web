@@ -82,6 +82,42 @@
 	top: -45px;
 }
 
+#o3d-demo-color-editor{
+	position: relative; 
+	
+	bottom: 700px; 
+	left:220px; 
+	float: right; 
+	width: 300px; 
+	height: 200px; 
+	z-index: 1000;
+	text-align: center;
+	padding-left: 20px;
+	
+}
+
+#o3d-demo-color-editor-arrow{
+	position: relative;
+	transform: rotate(150deg);
+	bottom:470px;
+	height: 130px;
+	right:-55px;
+	filter: sepia(100%) saturate(110%) brightness(300%) hue-rotate(1deg);
+}
+
+#o3d-demo-color-editor-text{
+	position: relative;
+	font-family: "Condiment", cursive;
+	font-weight: 400;
+	font-size: 35pt;
+	font-style: normal;
+	bottom:600px;
+	z-index: 1001;
+	transform: rotate(230deg);
+	filter: sepia(100%) saturate(110%) brightness(120%) hue-rotate(1deg);
+
+}
+
 
 
 

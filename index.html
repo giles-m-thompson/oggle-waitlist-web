@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Oggle - Early Access Program</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Condiment&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Heebo:400,700|IBM+Plex+Sans:600" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="src/scss/style.scss">
@@ -12,6 +15,11 @@
     <link rel="stylesheet" href="src/css/text-sparkle.css">
     <script src="https://unpkg.com/scrollreveal@4.0.0/dist/scrollreveal.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js" integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="./src/js/color-picker/iro5.min.js"></script>
+    <script src="./src/js/color-picker/chroma.min.js"></script>
+    <script defer="defer" src="./src/js/color-picker/main.js"></script>
+
 </head>
 <body class="is-boxed has-animations">
     <div class="body-wrap boxed-container">
@@ -90,7 +98,20 @@
 								<h2 class="section-title mt-0">Live Demo</h2>
 	                            <p class="section-paragraph">Try how  <b>super simple</b> and fast <span><b>Oggle</b><sup>&#174;</sup></span> makes it to customise template, mock device screens , colours, scaling, etc to meet your project requirements.  </p>
 								
+                                
                                 <div id="o3d-demo-container"></div>
+
+                                <div id="o3d-demo-color-editor">
+                                    <div id="picker">
+                                        <div class="IroColorPicker" id="" style="display: block;"></div>
+                                    </div>
+                                    <img id="o3d-demo-color-editor-arrow" src="./src/images/arrow.png" />
+                                    <span id="o3d-demo-color-editor-text">Change Colour</span>
+                                </div>
+                                
+                                
+
+                                </div>
 							</div>
                         </div>
                         <div class="features-wrap">
