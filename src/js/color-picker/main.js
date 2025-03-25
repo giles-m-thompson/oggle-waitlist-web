@@ -1,3 +1,5 @@
+
+/** 
 const colorPicker = new iro.ColorPicker('#picker', {
   width: 180,
   color: 'hsla(341, 100%, 85%, 1)',
@@ -55,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 colorPicker.on('color:change', function (color) {
 
+  console.log(document.getElementById("picker"));
   console.log('color: ' + color.rgbString);
   
 });
@@ -269,3 +272,6 @@ function toggleDropper() {
   });
 }
 window.toggleDropper = toggleDropper;
+
+window.colorPickerInstance = colorPicker;
+*/

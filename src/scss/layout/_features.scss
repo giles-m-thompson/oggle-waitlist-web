@@ -84,9 +84,8 @@
 
 #o3d-demo-color-editor{
 	position: relative; 
-	
-	bottom: 700px; 
-	left:220px; 
+	bottom: 340px; 
+	left:120px; 
 	float: right; 
 	width: 300px; 
 	height: 200px; 
@@ -98,23 +97,33 @@
 
 #o3d-demo-color-editor-arrow{
 	position: relative;
-	transform: rotate(150deg);
-	bottom:470px;
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1) rotate(100deg);;
+	bottom:570px;
 	height: 130px;
-	right:-55px;
+	right:-140px;
 	filter: sepia(100%) saturate(110%) brightness(300%) hue-rotate(1deg);
 }
 
-#o3d-demo-color-editor-text{
+
+svg.bendtext {
+  position: relative;
+  transform: rotate(0deg);
+  bottom:530px;
+  left:-10px;
+  width:420px;
+}
+
+svg.bendtext text {
+	text-anchor: middle;
+	offset: 50%;
 	position: relative;
 	font-family: "Condiment", cursive;
 	font-weight: 400;
-	font-size: 35pt;
+	font-size: 31pt;
 	font-style: normal;
-	bottom:600px;
 	z-index: 1001;
-	transform: rotate(230deg);
-	filter: sepia(100%) saturate(110%) brightness(120%) hue-rotate(1deg);
+	fill: bisque;
 
 }
 

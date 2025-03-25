@@ -3,6 +3,7 @@ import "@babylonjs/loaders/glTF";
 import "@babylonjs/core/Materials/Textures/Loaders/envTextureLoader";
 import axios from "axios";
 import {DeviceMesh} from '../engine/meshes/DeviceMesh'
+import { ColorEditor } from './utils/ColorEditor';
 import { LogManager } from '../logging/LogManager';
 import { Level } from '../logging/Level';
 
@@ -33,6 +34,9 @@ class EngineManager {
         this.fps = 30;
         this.lastTime = 0;
         this.frameDuration = 1000 / this.fps;
+        /**  @type {DeviceMesh} */
+        this.demoDeviceMesh = null
+        this.colorEditor = null;
     }
 
     /**
@@ -90,19 +94,12 @@ class EngineManager {
         //setup scene HDR IBL texture
         const sceneHdrTexture = this.#setupSceneHdrIBLEnvTexture(0.4);
 
+        //configure post-processing rendering pipeline.
         const pipeline = this.#setupRenderingPipeline();
-
         var glowLayer = new BABYLON.GlowLayer("glowLayer", this.scene)
         glowLayer.intensity = 0.25
 
-
-        //init scene gizmos
-        //this.#initSceneGizmos();
-
-        //attach engine window resize listener
-        //this.#attachWindowResizeListener();
-
-        //setup optional onSceneReady callback handler
+        //setup onSceneReady callback handler
         this.#setupSceneReadyHandler();
 
         //setup up drag and drop handler for device meshes, this will enable
@@ -111,6 +108,8 @@ class EngineManager {
 
         //setup mesh selection handler
         this.#setupMeshSelectionHandler();
+
+        this.#setupColorEditor();
 
         //attach engine to the scene so its globally available
         //TODO: Remove this logic, an external code that requires access to the 
@@ -600,9 +599,9 @@ class EngineManager {
 
                         //known device metadata
                         const deviceMetaData = {
-                            "id": "iphone-14-pro",
+                            "id": "iphone-13-pro",
                             "assetId": "1234",
-                            "name": "iphone-14-pro#1",
+                            "name": "iphone-13-pro#1",
                             "type": "Device",
                             "bodySubmeshName": "Body_Body_0_12",
                             "bodyMaterialName": "Body",
@@ -643,6 +642,9 @@ class EngineManager {
 
                                        //enhance model look for the current environment
                                        this.#enhanceDemoMeshVisualFidelity(loadedmesh);
+
+                                       //store the top-level device mesh for later easy reference as necessary
+                                       this.demoDeviceMesh = demoDeviceMesh;
                                        
 
                                       });
@@ -758,6 +760,24 @@ class EngineManager {
             }
         };
 
+    }
+
+    #setupColorEditor(){
+
+        //instantiate and initialise color editor.
+        const colorEditor = new ColorEditor("o3d-demo-color-editor");
+        colorEditor.initialise();
+
+        //register our listener to be notified of color change events.
+        colorEditor.registerColorChangeEventListener((color)=> {
+            
+            //update the color of the demo device mesh
+            this.demoDeviceMesh.updateBodyColour(color.hexString);
+           
+        },"engineManagerDefault");
+
+        //store to an instance variable for later reference as necessary.
+        this.colorEditor = colorEditor;
     }
 
     
