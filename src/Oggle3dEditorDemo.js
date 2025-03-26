@@ -16,8 +16,12 @@ import { EngineManager } from "./engine/EngineManager";
  */
 class Oggle3dEditorDemo {
 
-    constructor(engineTargetRenderElementId) {
+    constructor(
+        engineTargetRenderElementId,
+        engineColorEditorElementId
+    ) {
         this.engineTargetRenderElementId = engineTargetRenderElementId;
+        this.engineColorEditorElementId = engineColorEditorElementId;
         this.engineManager = null;
     }
 
@@ -26,7 +30,10 @@ class Oggle3dEditorDemo {
         this.#log("Initialising Oggle 3D Editor Demo.")
 
         //instantiate and initialise EngineManager.
-        this.engineManager = EngineManager.getSingletonInstance(this.engineTargetRenderElementId);
+        this.engineManager = EngineManager.getSingletonInstance(
+            this.engineTargetRenderElementId,
+            this.engineColorEditorElementId
+        );
         this.engineManager.initialise();
 
     }

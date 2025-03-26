@@ -255,9 +255,15 @@
 
         //specify engine render target..
         const o3dEditorEngineDemoParentEle = "o3d-demo-container";
+        
+        //engine color editor target element id
+        const o3dEditorEngineDemoColorEditorEle = "o3d-demo-color-editor"
 
         //instantiate and initialise the demo.
-        const oggle3dEditorDemo = new Oggle3dEditorDemo(o3dEditorEngineDemoParentEle);
+        const oggle3dEditorDemo = new Oggle3dEditorDemo(
+            o3dEditorEngineDemoParentEle,
+            o3dEditorEngineDemoColorEditorEle
+        );
         oggle3dEditorDemo.initialise();
        
 

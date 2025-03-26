@@ -22,8 +22,12 @@ import { Level } from '../logging/Level';
  */
 class EngineManager {
 
-    constructor(aRenderTargetDivId) {
+    constructor(
+        aRenderTargetDivId,
+        colorEditorTargetElementId
+    ) {
         this.renderTargetDivId = aRenderTargetDivId;
+        this.colorEditorTargetElementId = colorEditorTargetElementId;
         this.canvas = null;
         this.engine = null;
         this.scene = null;
@@ -37,6 +41,7 @@ class EngineManager {
         /**  @type {DeviceMesh} */
         this.demoDeviceMesh = null
         this.colorEditor = null;
+        
     }
 
     /**
@@ -46,9 +51,15 @@ class EngineManager {
     * 
     * @returns {EngineManager}
     */
-    static getSingletonInstance(aRenderTargetDivId) {
+    static getSingletonInstance(
+        aRenderTargetDivId,
+        aColorEditorRenderTargetDiv
+    ) {
         if (!EngineManager.globalInstance) {
-            EngineManager.globalInstance = new EngineManager(aRenderTargetDivId);
+            EngineManager.globalInstance = new EngineManager(
+                aRenderTargetDivId,
+                aColorEditorRenderTargetDiv
+            );
         }
         return EngineManager.globalInstance;
     }
@@ -765,12 +776,12 @@ class EngineManager {
     #setupColorEditor(){
 
         //instantiate and initialise color editor.
-        const colorEditor = new ColorEditor("o3d-demo-color-editor");
+        const colorEditor = new ColorEditor(this.colorEditorTargetElementId);
         colorEditor.initialise();
 
         //register our listener to be notified of color change events.
         colorEditor.registerColorChangeEventListener((color)=> {
-            
+
             //update the color of the demo device mesh
             this.demoDeviceMesh.updateBodyColour(color.hexString);
            
