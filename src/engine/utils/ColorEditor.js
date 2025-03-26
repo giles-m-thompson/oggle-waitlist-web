@@ -1,4 +1,3 @@
-import { ThinSSRPostProcess } from "@babylonjs/core/PostProcesses/thinSSRPostProcess";
 
 /**
  * Utility component that provides a robust colour editing UI
