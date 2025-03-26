@@ -6,19 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Oggle - Early Access Program</title>
     
+      <!-- for drag and drop. -->
+     
     <link href="https://fonts.googleapis.com/css2?family=Condiment&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Heebo:400,700|IBM+Plex+Sans:600" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="src/scss/style.scss">
     <link rel="stylesheet" href="src/css/wordscroll.css">
     <link rel="stylesheet" href="src/css/text-sparkle.css">
+    <link rel="stylesheet" href="src/css/drop-panel.css">
     <script src="https://unpkg.com/scrollreveal@4.0.0/dist/scrollreveal.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js" integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
     
     <script type="module" src="./src/js/color-picker/iro5.min.js"></script>
     <script type="module" src="./src/js/color-picker/chroma.min.js"></script>
     <script type="module" defer="defer" src="./src/js/color-picker/main.js"></script>
+    <script type="module" src="./src/js/drop-panel.js"></script>
 
 
 </head>
@@ -49,7 +52,7 @@
                     <div class="hero-inner">
 						<div class="hero-copy">
 	                        <!-- <h1 class="hero-title mt-0">Beautiful 3D App Showcases, in the browser, in minutes!</h1> -->
-                            <h1 class="hero-title mt-0">Create Beautiful 3D App Showcases,<br/>For: 
+                            <h1 class="hero-title mt-0 ">Create Beautiful 3D App Showcases,<br/>For: 
                                 
                                     <span class="window">
                                       <div class="window-inner">
@@ -63,7 +66,7 @@
                                     </span>
                                   </span>
                             </h1>
-                            <p class="hero-paragraph">No 3D design skills necessary; <b>its just point & click and drag & drop - directly in the browser.</b> Start from scratch or choose one off our ever-growing list of professional-grade templates!</p>
+                            <p class="hero-paragraph">No 3D design skills necessary; <b>its just point & click and drag & drop - directly in the browser.</b> Start from scratch or utilise a <b>pro template</b> and simply edit the text & device screen placeholders.</p>
 	                        <!-- <p class="hero-paragraph">No 3D design skills necessary; its just point & click and drag & drop. You can start from scratch or choose one of our ever-growing list of premium, studio grade templates.</p> -->
 	                        <div class="hero-cta">
 								<a class="button button-primary" href="#"><i class="fa-solid fa-wand-magic-sparkles fa-lg"></i> &nbsp;Get Early Access</a>
@@ -84,7 +87,7 @@
 							</div>
 							<div class="hero-media-container">
 								<img class="hero-media-image asset-light" src="src/images/hero-media-light.svg" alt="Hero media">
-								<video class="hero-media-image asset-dark is-moving-object is-rotating" src="src/videos/oggle-web-promo-smaller-cropped.mp4" alt="oggle video demo" autoPlay loop muted></video>
+								<video id="hero-vid" class="hero-media-image asset-dark is-moving-object is-rotating" src="src/videos/oggle-web-promo-smaller-cropped.mp4" alt="oggle video demo" autoPlay loop muted></video>
 							</div>
 						</div>
                     </div>
@@ -96,42 +99,38 @@
 					<div class="features-inner section-inner has-bottom-divider">
 						<div class="features-header text-center">
 							<div class="container-sm">
-								<h2 class="section-title mt-0">Live Demo</h2>
-	                            <p class="section-paragraph">Try how  <b>super simple</b> and fast <span><b>Oggle</b><sup>&#174;</sup></span> makes it to customise template, mock device screens , colours, scaling, etc to meet your project requirements.  </p>
+								<h2 class="section-title mt-0 ">Live Demo</h2>
+	                            <p class="section-paragraph">See how simple <span><b>Oggle</b><sup>&#174;</sup></span> makes it to customise 3D device screens, colours, orientation, etc to meet your project requirements.  </p>
 								
-                                
                                 <div id="o3d-demo-container"></div>
 
                                 
-                                <div id="o3d-demo-color-editor">
-                                    <!--
-                                    <div id="picker">
-                                        <div class="IroColorPicker" id="" style="display: block;"></div>
-                                    </div>
-                                    <div id="o3d-demo-color-editor-text">
-                                    <svg class="bendtext">
-                                        <defs>
-                                          <path id="line1" d="
-                                                  M 0,300 
-                                                  A 200,200 0 0 1 400,300"
-                                           />
-                                          <path id="line2" d="
-                                                  M 0,300 
-                                                  A 200.75,200 0 0 1 400,300"
-                                           />
-                                        </defs>
-                                        <text>
-                                          <textPath startOffset="50%" xlink:href="#line1">Change Colour</textPath>
-                                        </text>
-                                      </svg>
-                                    </div>
-                                    <img id="o3d-demo-color-editor-arrow" src="./src/images/arrow.png" />
-                                   
-                                     -->
-                                </div>
-                                
-                            
+                                <div id="o3d-demo-color-editor"></div>
 
+                                <section class="mt-5 px-3 flex gap-6" id="o3d-demo-drag-and-drop-panel">
+                                    <div class="flex-1 flex flex-col items-center p-3 border-2 border-dotted border-gray-300 rounded-lg drag-area" id="dragandd" style="position: relative;">
+                                        <i class="fa-solid fa-cloud-arrow-up fa-bounce" style="font-size: 66px; color: #535FD7"></i>
+                                      <header class="mt-6">
+                                        <span class="drag-file">Drag files here </span> or
+                                        <button class="px-2 py-1 text-beige bg-violet-400 rounded-full file-input-button">
+                                          select
+                                        </button>
+                                        a file.
+                                      </header>
+                                      <p class="mt-12 text-gray-400 text-sm">
+                                        MP4, PNG or JPG only.
+                                      </p>
+                                      <input type="file" class="file-input" hidden="">
+                                    </div>
+                                    <div id="document-images"></div>
+                                    <p class="text-red-700 text-sm hidden" id="filesize-error">
+                                        The file size should be less than 5mb
+                                      </p>
+                                      <p class="text-red-700 text-sm hidden" id="filetype-error">
+                                        The file should be an image or pdf only
+                                      </p>
+                                  </section>
+                                
                                 </div>
 							</div>
                         </div>
@@ -191,6 +190,11 @@
                 </div>
             </section>
         </main>
+
+
+       
+        
+        
 
         <footer class="site-footer has-top-divider">
             <div class="container">
@@ -268,6 +272,8 @@
        
 
     </script>
+
+
    
 </body>
 </html>

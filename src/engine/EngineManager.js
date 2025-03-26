@@ -41,6 +41,7 @@ class EngineManager {
         /**  @type {DeviceMesh} */
         this.demoDeviceMesh = null
         this.colorEditor = null;
+        this.deviceToFileUploadNameMap = null;
         
     }
 
@@ -91,6 +92,9 @@ class EngineManager {
         //set scene background
         this.background = this.#createSceneBackground(this.scene);
 
+        //instantiate device to upload map, prevents multiple simultaneous uploads
+        this.deviceToFileUploadNameMap = new Map();
+
         //add and configure camera...
         const cameras = this.#setupSceneCameras();
         this.sceneCamera = cameras.mainCamera;
@@ -98,9 +102,6 @@ class EngineManager {
 
         //add and configure scene lights and shadows.
         this.sceneLight = this.#setupSceneLightsAndShadows(1);
-
-        //setup scene plane
-        //this.scenePlane = this.#setupScenePlane(); //set from fixed default values, this may be later overridden by template/scene specific customisations.
 
         //setup scene HDR IBL texture
         const sceneHdrTexture = this.#setupSceneHdrIBLEnvTexture(0.4);
@@ -112,10 +113,6 @@ class EngineManager {
 
         //setup onSceneReady callback handler
         this.#setupSceneReadyHandler();
-
-        //setup up drag and drop handler for device meshes, this will enable
-        //the use to dynamically drag and drop images or videos to a devices screen.
-        this.#setupDeviceMeshDragAndDrop();
 
         //setup mesh selection handler
         this.#setupMeshSelectionHandler();
@@ -286,305 +283,7 @@ class EngineManager {
         })
     }
 
-    #setupDeviceMeshDragAndDrop() {
-
-
-
-        //create drag and drop prompt
-        // this.#createDragAndDropPrompt();
-
-        //create drag and drop error prompt
-        //this.#createDragAndDropError();
-
-
-        //inner func determiens whether a device mesh exists at the current mouse position.
-        const pickedDeviceMesh = (pointerX, pointerY) => {
-
-            const pickInfo = this.scene.pick(pointerX, pointerY);
-
-            if (pickInfo.hit) {
-                const hoveredMesh = pickInfo.pickedMesh;
-
-                const deviceMesh = this.#locateRootMesh(hoveredMesh).parentDeviceMesh;
-
-                if (deviceMesh) {
-                    return deviceMesh;
-                }
-
-            }
-
-            return null
-
-        }
-
-
-        const pickedVideoMesh = (pointerX, pointerY) => {
-
-            const pickInfo = this.scene.pick(pointerX, pointerY);
-
-            if (pickInfo.hit) {
-                const hoveredMesh = pickInfo.pickedMesh;
-
-                const videoMesh = this.#locateRootMesh(hoveredMesh).parentVideoMesh;
-
-                if (videoMesh) {
-                    return videoMesh;
-                }
-
-            }
-
-            return null
-
-        }
-
-
-        //inner func, where the dragged file is an image or video, reference to it is returned.
-        const draggedImageOrVideoFile = (event) => {
-
-            const items = event.dataTransfer.items;
-            if (items.length === 0) return;
-
-            //if this is being called during a drop event the file will be available..
-            const file = items[0].getAsFile();
-            if (file) {
-                if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
-                    return file;
-                } else {
-                    return null
-                }
-            } else {
-
-                //otherwise we get the type without the file object
-                const fileType = items[0].type;
-                if (fileType.startsWith('image/') || fileType.startsWith('video/')) {
-                    return fileType;
-                } else {
-                    return null;
-                }
-            }
-        }
-
-        const hideDragDropPrompt = () => {
-            var dragDropPrompt = document.getElementById('dragDropPrompt');
-            dragDropPrompt.style.top = '-200px';
-            dragDropPrompt.style.opacity = 0;
-        }
-
-        const hideDragDropError = () => {
-            var dragDropError = document.getElementById('dragDropError');
-            dragDropError.style.top + 10 + 'px';
-            dragDropError.style.opacity = 0;
-        }
-
-
-
-
-        //handle drop events
-        window.addEventListener('drop', (event) => {
-            event.preventDefault();
-
-            // Get the mouse coordinates
-            var x = event.clientX;
-            var y = event.clientY;
-
-            // Perform the pick based on the last recorded mouse position
-            const pickInfo = this.scene.pick(x, y);
-
-            if (pickInfo.hit) {
-                const hoveredMesh = pickInfo.pickedMesh;
-                /** @type {DeviceMesh | VideoMesh} */
-                const deviceOrVideoMesh = (this.#locateRootMesh(hoveredMesh).parentDeviceMesh) ? this.#locateRootMesh(hoveredMesh).parentDeviceMesh : this.#locateRootMesh(hoveredMesh).parentVideoMesh;
-
-                if (deviceOrVideoMesh) {
-
-                    //only a single drag and drop upload may be handled at any one time, we can determine
-                    //if an upload is in progress by checking if the "deviceToFileUploadNameMap" contains an 
-                    //entry. Uploads that are in-progress are stored to this map.
-                    if (this.deviceToFileUploadNameMap.size > 0) {
-
-                        //log message to inform user that an upload is already in progress
-                        //TODO:GT We may want to publish an event for the upcoming NotificationManager to pick up and display in the UI, here.
-                        LogManager.getInstance().logAll(Level.ERROR, "An upload is already in progress, please wait until it is complete.");
-                        return;
-                    }
-
-                    if (event.dataTransfer.items[0].kind === 'file') {
-                        const file = event.dataTransfer.items[0].getAsFile();
-                        if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
-                            //process upload, for the dropped file...
-                            //...for now create a blob of the URL on the front end.
-                            const blobURL = URL.createObjectURL(file);
-                            LogManager.getInstance().log(Level.INFO, "File Dropped On Device Mesh: %s Dropped File Was: %s", hoveredMesh.name, file.name);
-                            LogManager.getInstance().log(Level.DEBUG, 'Blob URL: %s', blobURL);
-
-                            //set the last upload attempted device name, this will be cleared once the device
-                            //is map to the file name on receopt of the STARTED event from the VideoPlaybackManager
-                            this.lastUploadRequestDevice = deviceOrVideoMesh;
-
-                            this.videoPlaybackManager.appendSegmentToVideoSequence(
-                                deviceOrVideoMesh,
-                                true,
-                                blobURL
-                            ).then(() => {
-
-                                //here we handle updating the top-level scene object to reflect that 
-                                //a new video segment has been updated.
-                                //NB: HOLD OF DOING THIS SINCE WE MIGHT WANT TO INDRODUCE A NEW LIST TYPE
-                                //    THAT WILL DISPLAY ALL VIDEO SEGMENTS ASSOCIATED WITH THE MESH. WE
-                                //    ALREADY HOLD THAT DATA IN THE SCENE OBJECT. 
-
-                            })
-
-                            //TODO:GT: Remove this post testing, the VideoManager will implicitly take care
-                            //         of undertaking the video normalizing step once completed it will
-                            //         fire an event to notify the EngineManager that a video has been 
-                            //         prepared for a device, the DeviceSceneObject will be included in the payload.
-                            //         The EngineManager will 
-                            /*
-                            const videoProcessor = new VideoProcessor();
-                            videoProcessor.init()
-                                          .then(async () => {
-    
-                                                const normalizedVidURL =  await videoProcessor.nomalizeVideo(blobURL);
-    
-                                                //load the image or video to the device mesh as a screen texture. .
-                                                deviceMesh.updateScreenTextureURL(normalizedVidURL);
-                    
-                                                //update the property in the device mesh scene object
-                                                const deviceMeshSceneObject = deviceMesh.parentMesh.sceneObject;
-                                                const updatedPropertyName = "screenTextureURL";
-                                                deviceMeshSceneObject[updatedPropertyName] = normalizedVidURL;
-                    
-                                                //publish (global) event via EventManager to notify interested subsystems (principally the InspectorManager) 
-                                                //that the device mesh screen texture has been updated.
-                                                const sceneObjectUpdateEventPayload = new SceneObjectUpdate(deviceMeshSceneObject,updatedPropertyName);
-                                                this.#publishEvent(Topics.APP_ENGINE_MGR_SCENE_MESH_UPDATED,sceneObjectUpdateEventPayload);
-    
-                                          })
-    
-                        */
-
-                            /*
-                                //load the image or video to the device mesh as a screen texture. .
-                                deviceMesh.updateScreenTextureURL(blobURL);
-        
-                                //update the property in the device mesh scene object
-                                const deviceMeshSceneObject = deviceMesh.parentMesh.sceneObject;
-                                const updatedPropertyName = "screenTextureURL";
-                                deviceMeshSceneObject[updatedPropertyName] = blobURL;
-        
-                                //publish (global) event via EventManager to notify interested subsystems (principally the InspectorManager) 
-                                //that the device mesh screen texture has been updated.
-                                const sceneObjectUpdateEventPayload = new SceneObjectUpdate(deviceMeshSceneObject, updatedPropertyName);
-                                this.#publishEvent(Topics.APP_ENGINE_MGR_SCENE_MESH_UPDATED, sceneObjectUpdateEventPayload);
-                                */
-                        } else {
-
-                            LogManager.getInstance().logAll(Level.ERROR, 'Unsupported file type: %s dropped on device mesh: %s,', null, file.type, hoveredMesh.name);
-
-                        }
-
-                    }
-                } else {
-
-                    LogManager.getInstance().logAll(Level.ERROR, "Dropped file on non-device mesh: %s", null, hoveredMesh.name);
-                }
-
-            } else {
-                LogManager.getInstance().log(Level.INFO, "File dropped outside any mesh");;
-            }
-
-            //clear drop prompt
-            hideDragDropPrompt();
-            hideDragDropError();
-
-        });
-
-
-        window.addEventListener('dragover', (event) => {
-            event.preventDefault(); // Necessary to prevent unexpected default handling of the drag event.
-
-
-            //if the camera is engaged, display message to the user to indicate that they
-            //will need to disengage the camera before dropping a file.
-            if (this.sceneCameraControlsAttached && draggedImageOrVideoFile(event)) {
-
-                // Get the dimensions of the div
-                var dragDropError = document.getElementById('dragDropError');
-                var divWidth = dragDropError.offsetWidth;
-                var divHeight = dragDropError.offsetHeight;
-
-                // Get the mouse coordinates
-                var x = event.clientX;
-                var y = event.clientY;
-
-                // Update the position of the div, centering it around the mouse pointer
-                dragDropError.style.left = (x - divWidth / 2) + 'px';
-                dragDropError.style.top = (y - divHeight / 2) - 170 + 'px';
-
-                dragDropError.style.opacity = 1;
-                dragDropError.style.top = dragDropError.style.top + 10 + 'px';
-
-
-
-                LogManager.getInstance().log(Level.INFO, "Camera engaged, please disengage the camera before dropping a file.");;
-                return false
-
-
-            }
-
-            // Check if a file is being dragged
-            var isFileDragged = false;
-            for (var i = 0; i < event.dataTransfer.items.length; i++) {
-                if (event.dataTransfer.items[i].kind === 'file') {
-                    isFileDragged = true;
-                    break; // Exit loop if a file is found
-                }
-            }
-
-            // Get pointer position from the event
-            const pointerX = event.clientX;
-            const pointerY = event.clientY;
-
-            if (isFileDragged
-                && (pickedDeviceMesh(pointerX, pointerY) || pickedVideoMesh(pointerX, pointerY))
-                && draggedImageOrVideoFile(event)
-                && this.deviceToFileUploadNameMap.size == 0) {
-
-
-
-                // Get the dimensions of the div
-                var dragDropPrompt = document.getElementById('dragDropPrompt');
-                var divWidth = dragDropPrompt.offsetWidth;
-                var divHeight = dragDropPrompt.offsetHeight;
-
-                // Get the mouse coordinates
-                var x = event.clientX;
-                var y = event.clientY;
-
-                // Update the position of the div, centering it around the mouse pointer
-                dragDropPrompt.style.left = (x - divWidth / 2) + 'px';
-                dragDropPrompt.style.top = (y - divHeight / 2) - 70 + 'px';
-
-                dragDropPrompt.style.opacity = 1;
-                dragDropPrompt.style.top = dragDropPrompt.style.top + 200 + 'px';
-            } else {
-
-                hideDragDropPrompt();
-
-            }
-
-        });
-
-
-
-        window.addEventListener('dragleave', function (event) {
-
-            //clear dragDropPrompt
-            hideDragDropPrompt();
-            hideDragDropError();
-        });
-
+    #setupDemoDragAndDropHandler(){
 
     }
 

@@ -1,0 +1,201 @@
+
+
+  
+  /* Flexbox and Layout */
+  .flex {
+    display: flex;
+  }
+  
+  .flex-col {
+    flex-direction: column;
+  }
+  
+  .items-center {
+    align-items: center;
+  }
+  
+  .w-full {
+    width: 100%;
+  }
+  
+  .md\:w-1\/2, .lg\:w-1\/2 {
+    width: 50%;
+  }
+  
+  .w-3\/4 {
+    width: 75%;
+  }
+  
+  .mt-6 {
+    margin-top: 1.5rem;
+  }
+  
+  .mt-8 {
+    margin-top: 2rem;
+  }
+  
+  .px-3 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  .py-3 {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  
+  .p-3 {
+    padding: 0.75rem;
+  }
+  
+  /* Button Styling */
+  button {
+    cursor: pointer;
+  }
+  
+  button:disabled {
+    cursor: not-allowed;
+  }
+  
+  /* Card Styling */
+  .bg-white {
+    background-color: #ffffff;
+  }
+  
+  .rounded-lg {
+    border-radius: 0.5rem;
+  }
+  
+  .rounded-sm {
+    border-radius: 0.125rem;
+  }
+  
+  .bg-slate-100 {
+    background-color: #f1f5f9;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  /* Headings and Text */
+  .text-lg {
+    font-size: 1.125rem;
+  }
+  
+  .text-sm {
+    font-size: 0.875rem;
+  }
+  
+  .text-xl {
+    font-size: 1.25rem;
+  }
+  
+  .text-slate-800 {
+    color: #334155;
+  }
+  
+  .text-red-600 {
+    color: #dc2626;
+  }
+  
+  .text-red-700 {
+    color: #b91c1c;
+  }
+  
+  .text-gray-400 {
+    color: #9ca3af;
+  }
+  
+  .text-white {
+    color: #ffffff;
+  }
+
+  .text-beige {
+    color:rgb(255, 223, 185);
+    font-weight: 500;
+  }
+  
+  /* Border Styles */
+  .border-2 {
+    border-width: 2px;
+  }
+  
+  .border-dotted {
+    border-style: dotted;
+  }
+  
+  .border-gray-300 {
+    border-color: #d1d5db;
+  }
+  
+  .drag-area {
+    cursor: pointer;
+  }
+  
+  .drag-file {
+    font-weight: 500;
+    color: #6b7280; /* gray-500 */
+  }
+  
+  /* Button Colors */
+  .bg-violet-400 {
+    background-color: #535FD7;
+  }
+  
+  .bg-violet-600 {
+    background-color: #7c3aed;
+  }
+  
+  .bg-gray-600 {
+    background-color: #4b5563;
+  }
+  
+  .bg-pink-200 {
+    background-color: #fecdd3;
+  }
+  
+  /* File Input Styles */
+  .file-input {
+    display: none;
+  }
+  
+  .file-input-button {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border-radius: 9999px; /* rounded-full */
+  }
+  
+  /* Icon Styling */
+  .text-violet-400 {
+    color: #a78bfa;
+  }
+  
+  .text-6xl {
+    font-size: 4rem;
+  }
+  
+  /* Divider */
+  hr {
+    margin-top: 1.25rem;
+    border: none;
+    border-top: 1px solid #e5e7eb; /* gray-200 */
+  }
+  
+  /* Visibility Utility */
+  .hidden {
+    display: none;
+  }
+  
+  ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 1.5rem;
+  }
+  
+  #dragandd{
+    position: relative;
+    padding-top:40px !important;
+  }
