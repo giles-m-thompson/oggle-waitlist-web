@@ -102,6 +102,8 @@ dropArea.addEventListener("dragover", (event) => {
   event.preventDefault(); //preventing from default behaviour
   //dropArea.classList.add("active");
  // dragFile.textContent = "Release to Upload File";
+  const dragAndDropContents = document.getElementById("drag-and-drop-default");
+  dragAndDropContents.classList.add("on-dragged-over");
 });
 
 // //If user leave dragged File from DropArea
@@ -112,6 +114,9 @@ element. */
 dropArea.addEventListener("dragleave", () => {
   //dropArea.classList.remove("active");
   //dragFile.textContent = "Drag files here to upload";
+  const dragAndDropContents = document.getElementById("drag-and-drop-default");
+  dragAndDropContents.classList.remove("on-dragged-over")
+
 });
 
 //If user drop File on DropArea

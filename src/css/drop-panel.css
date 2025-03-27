@@ -199,3 +199,7 @@
     position: relative;
     padding-top:40px !important;
   }
+
+  .on-dragged-over{
+    opacity: 0;
+  }

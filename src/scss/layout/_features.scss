@@ -112,6 +112,7 @@ svg.bendtext {
   bottom:530px;
   left:-10px;
   width:420px;
+
 }
 
 svg.bendtext text {
@@ -158,6 +159,14 @@ svg.bendtext text {
  	z-index: 1001;
  	transform: rotate(230deg);
  	filter: sepia(100%) saturate(70%) brightness(115%) hue-rotate(1deg);
+}
+
+#o3d-demo-drop-panel-text-2{
+	position:relative;
+	bottom: 720px;
+	right:270px;
+	width: 300px;
+	z-index: 1002;
 }
 
 #pan-prompt{

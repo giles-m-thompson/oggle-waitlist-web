@@ -66,7 +66,7 @@
                                     </span>
                                   </span>
                             </h1>
-                            <p class="hero-paragraph">No 3D design skills necessary; <b>its just point & click and drag & drop - directly in the browser.</b> Start from scratch or utilise a <b>pro template</b> and simply edit the text & device screen placeholders.</p>
+                            <p class="hero-paragraph">No 3D design skills necessary; <b>its just drag & drop - directly in the browser.</b> Start from scratch or utilise a <b>pro template</b> and simply customize the text & device screens.</p>
 	                        <!-- <p class="hero-paragraph">No 3D design skills necessary; its just point & click and drag & drop. You can start from scratch or choose one of our ever-growing list of premium, studio grade templates.</p> -->
 	                        <div class="hero-cta">
 								<a class="button button-primary" href="#"><i class="fa-solid fa-wand-magic-sparkles fa-lg"></i> &nbsp;Get Early Access</a>
@@ -113,7 +113,9 @@
                                 <section class="mt-5 px-3 flex gap-6" id="o3d-demo-drag-and-drop-panel">
                                 
                                     <div class="flex-1 flex flex-col items-center p-3 border-2 border-dotted border-gray-300 rounded-lg drag-area" id="dragandd" style="position: relative;">
-                                        <i class="fa-solid fa-cloud-arrow-up fa-bounce" style="font-size: 66px; color: #535FD7"></i>
+                                     
+                                      <div id="drag-and-drop-default">
+                                      <i class="fa-solid fa-cloud-arrow-up fa-bounce" style="font-size: 66px; color: #535FD7"></i>
                                       <header class="mt-6">
                                         <span class="drag-file">Drag files here </span> or
                                         <button class="px-2 py-1 text-beige bg-violet-400 rounded-full file-input-button">
@@ -121,10 +123,11 @@
                                         </button>
                                         a file.
                                       </header>
-                                      <p class="mt-12 text-gray-400 text-sm">
+                                      <p class="mt-12 text-gray-400 text-sm ">
                                         MP4, PNG or JPG only.
                                       </p>
                                       <input type="file" class="file-input" hidden="">
+                                   </div>
                                     </div>
                                     <div id="document-images"></div>
                                     <p class="text-red-700 text-sm hidden" id="filesize-error">
@@ -141,7 +144,10 @@
                                 </div>
 
                                  <img id="o3d-demo-drop-panel-arrow" src="./src/images/arrow.png" />
+                                 <div id="o3d-demo-drop-panel-text-2"><svg class="bendtext"><defs><path id="line1Mod" d="M 0,280 A 70,70 0 0 1 500,280"></path></defs><text><textPath startOffset="35%" xlink:href="#line1Mod">Change Screen</textPath></text></svg></div>
+                                 <!--
                                  <span id="o3d-demo-drop-panel-text">Change Screen</span>
+                            -->
 
 							</div>
                         </div>
