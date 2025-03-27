@@ -137,6 +137,46 @@ svg.bendtext text {
 	bottom: 610px;
 }
 
+#o3d-demo-drop-panel-arrow{
+	position: relative;
+	-webkit-transform: scaleX(-1);
+	transform:  rotate(80deg);;
+	bottom:1020px;
+	height: 120px;
+	right:310px;
+	filter: sepia(100%) saturate(110%) brightness(300%) hue-rotate(1deg);
+}
+
+#o3d-demo-drop-panel-text{
+    position: relative;
+ 	font-family: "Condiment", cursive;
+ 	font-weight: 400;
+ 	font-size: 30pt;
+ 	font-style: normal;
+ 	bottom: 1140px;
+	right:530px;
+ 	z-index: 1001;
+ 	transform: rotate(230deg);
+ 	filter: sepia(100%) saturate(70%) brightness(115%) hue-rotate(1deg);
+}
+
+#pan-prompt{
+	position: relative;
+	bottom:290px;
+	left:198px;
+}
+
+#pan-prompt img{
+	position: relative;
+	height: 85px;
+}
+
+#pan-prompt p{
+	position: relative;
+	right:185px;
+	bottom:50px;
+}
+
 
 
 @include media( '>medium' ) {
