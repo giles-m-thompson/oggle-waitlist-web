@@ -200,6 +200,36 @@
     padding-top:40px !important;
   }
 
-  .on-dragged-over{
+  .hide-panel{
     opacity: 0;
+  }
+  .show-panel{
+    opacity: 1;
+  }
+
+  #drag-and-drop-dragging{
+    position: relative;
+    top:-190px;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  #drag-and-drop-default{
+    transition: opacity 0.5s ease-in-out;
+ 
+  }
+
+  #drag-and-drop-success{
+    position: relative;
+    top:-300px;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+   
+  }
+
+  #drag-and-drop-error{
+    position: relative;
+    top:-430px;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
   }

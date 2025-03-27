@@ -100,10 +100,13 @@ triggered, it will prevent the default behavior, add the active class to the dro
 change the text of the dragFile element. */
 dropArea.addEventListener("dragover", (event) => {
   event.preventDefault(); //preventing from default behaviour
-  //dropArea.classList.add("active");
- // dragFile.textContent = "Release to Upload File";
+
   const dragAndDropContents = document.getElementById("drag-and-drop-default");
-  dragAndDropContents.classList.add("on-dragged-over");
+  dragAndDropContents.classList.add("hide-panel");
+
+  const dragAndDropContentsDragging = document.getElementById("drag-and-drop-dragging");
+  dragAndDropContentsDragging.classList.add("show-panel");
+  dragAndDropContentsDragging.style.opacity = 1;
 });
 
 // //If user leave dragged File from DropArea
@@ -111,11 +114,13 @@ dropArea.addEventListener("dragover", (event) => {
 triggered, it will remove the active class from the dropArea element and change the text of the
 dragFile
 element. */
-dropArea.addEventListener("dragleave", () => {
-  //dropArea.classList.remove("active");
-  //dragFile.textContent = "Drag files here to upload";
+dropArea.addEventListener("dragleave", (event) => {
+  event.preventDefault(); 
+  const dragAndDropContentsDragging = document.getElementById("drag-and-drop-dragging");
+  dragAndDropContentsDragging.style.opacity = 0;
+
   const dragAndDropContents = document.getElementById("drag-and-drop-default");
-  dragAndDropContents.classList.remove("on-dragged-over")
+  dragAndDropContents.classList.remove("hide-panel")
 
 });
 
@@ -125,8 +130,17 @@ will prevent the default behavior, remove the active class from the dropArea ele
 text of the dragFile element, and call the setttingFileValue function. */
 dropArea.addEventListener("drop", (e) => {
   e.preventDefault();
+
+  /*
+  const dragAndDropContentsDragging = document.getElementById("drag-and-drop-dragging");
+  dragAndDropContentsDragging.style.opacity = 0;
+
+  const dragAndDropContents = document.getElementById("drag-and-drop-default");
+  dragAndDropContents.classList.remove("hide-panel")
+  */
+
+  //restore the UI to pre-drag
   const target = e.dataTransfer;
- 
   setttingFileValue(target);
 });
 
@@ -168,29 +182,82 @@ const setttingFileValue = (target) => {
 
   /* This is checking the file size. If the file size is greater than 5mb, it will show an error
     message. */
-  let sizeInMB = Number.parseFloat(fileSize / (1024 * 1024)).toFixed(2);
-  console.log(sizeInMB);
+  const sizeInMB = Number.parseFloat(fileSize / (1024 * 1024)).toFixed(2);
+
+   /* This is checking the file type. If the file type is not pdf or image, it will show an error message. */
+  const fileTypes = ["video/mp4","image/png","image/jpg","image/jpeg"];
+
   if (sizeInMB > 500) {
-    filesizeErrorMessage.classList.remove("hidden");
-    filetypeErrorMessage.classList.add("hidden");
+
+    showUploadStatus(false, "File Size Exceeds 500Mb");
+
+  } else if (!fileTypes.includes(target.files[0].type)) {
+
+    showUploadStatus(false,"Unsupported File Type");
+
   } else {
-    filesizeErrorMessage.classList.add("hidden");
-    /* This is checking the file type. If the file type is not pdf or image, it will show an error message. */
-    const fileTypes = ["video/mp4","image/png","image/jpg","image/jpeg"]
-    if (
-      fileTypes.includes(target.files[0].type)
-    ) {
 
-        console.log(target.files[0]);
+    //show success upload status.
+    showUploadStatus(true);
 
-        //create blob url from file
-        const blobURL = URL.createObjectURL(target.files[0]);
-        console.log(blobURL);
-        //document.getElementById("hero-vid").src = blobURL;
+    console.log(target.files[0]);
 
-   
-    } else {
-      filetypeErrorMessage.classList.remove("hidden");
-    }
+    //create blob url from file
+    const blobURL = URL.createObjectURL(target.files[0]);
+    console.log(blobURL);
+    //document.getElementById("hero-vid").src = blobURL;
+
+
   }
 };
+
+const clearPanel = () => {
+
+  const dragAndDropContentsDragging = document.getElementById("drag-and-drop-dragging");
+  dragAndDropContentsDragging.style.opacity = 0;
+
+  const dragAndDropContents = document.getElementById("drag-and-drop-default");
+  dragAndDropContents.style.opacity = 0;
+
+  const dragAndDropSuccess = document.getElementById("drag-and-drop-success");
+  dragAndDropSuccess.style.opacity = 0;
+
+  const dragAndDropError = document.getElementById("drag-and-drop-error");
+  dragAndDropError.style.opacity = 0;
+
+}
+
+const showUploadStatus = (success,msg) => {
+
+  clearPanel();
+
+  if(success){
+    const dragAndDropSuccess = document.getElementById("drag-and-drop-success");
+    dragAndDropSuccess.style.opacity = 1;
+    setTimeout(() => {
+
+      clearPanel();
+      const dragAndDropContents = document.getElementById("drag-and-drop-default");
+      dragAndDropContents.style.opacity = 1;
+
+    },2500)
+  }else{
+
+    const dragAndDropErrorMsg = document.getElementById("drag-and-drop-error-msg");
+    const dragAndDropError = document.getElementById("drag-and-drop-error");
+    dragAndDropErrorMsg.textContent = msg;
+    dragAndDropError.style.opacity = 1;
+    setTimeout(() => {
+
+      clearPanel();
+      const dragAndDropContents = document.getElementById("drag-and-drop-default");
+      dragAndDropContents.style.opacity = 1;
+
+    },3500)
+
+
+
+  }
+
+
+}
