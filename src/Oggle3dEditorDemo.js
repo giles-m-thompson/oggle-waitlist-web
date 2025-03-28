@@ -1,5 +1,7 @@
 
 import { EngineManager } from "./engine/EngineManager";
+import { Level } from "./logging/Level";
+import { LogManager } from "./logging/LogManager";
 
 
 /**
@@ -18,21 +20,29 @@ class Oggle3dEditorDemo {
 
     constructor(
         engineTargetRenderElementId,
-        engineColorEditorElementId
+        engineColorEditorElementId,
+        engineDragDropPanelElementId
     ) {
         this.engineTargetRenderElementId = engineTargetRenderElementId;
         this.engineColorEditorElementId = engineColorEditorElementId;
+        this.engineDragDropPanelElementId = engineDragDropPanelElementId;
         this.engineManager = null;
+        this.logManager = null;
     }
 
     initialise() {
 
         this.#log("Initialising Oggle 3D Editor Demo.")
 
+        //instantiate and initialise LogManager.
+        this.logManager = LogManager.getInstance();
+        this.logManager.setLoggingLevel(Level.DEBUG);
+
         //instantiate and initialise EngineManager.
         this.engineManager = EngineManager.getSingletonInstance(
             this.engineTargetRenderElementId,
-            this.engineColorEditorElementId
+            this.engineColorEditorElementId,
+            this.engineDragDropPanelElementId
         );
         this.engineManager.initialise();
 

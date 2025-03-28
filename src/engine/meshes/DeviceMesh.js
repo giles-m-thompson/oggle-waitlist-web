@@ -461,7 +461,7 @@ class DeviceMesh extends O3DMesh{
      * @param {boolean} showLoadingScreen Optional, where set to true and the loading screen is enabled for the mesh instance,
      *                                    a loading sequence will be displayed before the screen is updated.
      */
-    updateScreenTextureVideo(aVideoElement,showLoadingScreen = false){
+    updateScreenTextureVideo(aVideoElement,showLoadingScreen = false,flipScreenVerticalOrientation = false){
         this.#verifyInitialised();
 
         //obtain screen material.
@@ -491,6 +491,9 @@ class DeviceMesh extends O3DMesh{
             screenMaterial.emissiveTexture = newVideoTexture;
             screenMaterial.emissiveColor = new BABYLON.Color3(0.2,0.2,0.2);
             screenMaterial.emissiveIntensity = 0.15; // Lower intensity to prevent washout
+            if(flipScreenVerticalOrientation){
+                newVideoTexture.vScale = -1;
+            }
             this.#hideBackScreen(500);
 
         }
@@ -510,7 +513,7 @@ class DeviceMesh extends O3DMesh{
      * @param {boolean} [showLoadingScreen=false] Flag which indicates whether the loading screen should be
      *                                            displayed on update of the screen, it isn't by default.
      */
-    updateScreenTextureImage(anImageURL,showLoadingScreen = false){
+    updateScreenTextureImage(anImageURL,showLoadingScreen = false,flipScreenVerticalOrientation = false){
         this.#verifyInitialised();
 
         //obtain screen material.
@@ -541,6 +544,9 @@ class DeviceMesh extends O3DMesh{
             screenMaterial.emissiveTexture = imgTexture
             screenMaterial.unlit = true;
             screenMaterial.visibility = 1;
+            if(flipScreenVerticalOrientation){
+                imgTexture.vScale = -1;
+            }
             this.#hideBackScreen(500);
 
             //const imgTexture = new BABYLON.Texture("./src/engine/img/black-screen-with-reflection-dark.png", this.scene);

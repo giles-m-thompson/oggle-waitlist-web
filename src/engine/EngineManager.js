@@ -6,6 +6,7 @@ import {DeviceMesh} from '../engine/meshes/DeviceMesh'
 import { ColorEditor } from './utils/ColorEditor';
 import { LogManager } from '../logging/LogManager';
 import { Level } from '../logging/Level';
+import { DragDropPanel } from './utils/DragDropPanel';
 
 
 /**
@@ -24,10 +25,12 @@ class EngineManager {
 
     constructor(
         aRenderTargetDivId,
-        colorEditorTargetElementId
+        colorEditorTargetElementId,
+        dragDropPanelTargetElementId
     ) {
         this.renderTargetDivId = aRenderTargetDivId;
         this.colorEditorTargetElementId = colorEditorTargetElementId;
+        this.dragDropPanelTargetElementId = dragDropPanelTargetElementId;
         this.canvas = null;
         this.engine = null;
         this.scene = null;
@@ -41,7 +44,9 @@ class EngineManager {
         /**  @type {DeviceMesh} */
         this.demoDeviceMesh = null
         this.colorEditor = null;
+        this.dragAndDropPanel = null;
         this.deviceToFileUploadNameMap = null;
+        this.curVideoElement = null;
         
     }
 
@@ -54,12 +59,14 @@ class EngineManager {
     */
     static getSingletonInstance(
         aRenderTargetDivId,
-        aColorEditorRenderTargetDiv
+        aColorEditorRenderTargetDiv,
+        aDragDropPanelTargetDiv
     ) {
         if (!EngineManager.globalInstance) {
             EngineManager.globalInstance = new EngineManager(
                 aRenderTargetDivId,
-                aColorEditorRenderTargetDiv
+                aColorEditorRenderTargetDiv,
+                aDragDropPanelTargetDiv
             );
         }
         return EngineManager.globalInstance;
@@ -117,7 +124,11 @@ class EngineManager {
         //setup mesh selection handler
         this.#setupMeshSelectionHandler();
 
+        //setup colour editor
         this.#setupColorEditor();
+
+        //setup drag and drop panel
+        this.#setupDragAndDropPanel();
 
         //attach engine to the scene so its globally available
         //TODO: Remove this logic, an external code that requires access to the 
@@ -489,6 +500,98 @@ class EngineManager {
         //store to an instance variable for later reference as necessary.
         this.colorEditor = colorEditor;
     }
+
+    #setupDragAndDropPanel(){
+
+        //instantiate and initialise the drag and drop upload panel
+        const dragAndDropPanel = new DragDropPanel(
+            this.dragDropPanelTargetElementId,
+            500
+        )
+        dragAndDropPanel.initialise();
+
+        //register our event listener to be notified of file upload events
+        dragAndDropPanel.registerDragDropEventListener((file) => {
+
+            //create new blob from the provided file
+            const blobURL = URL.createObjectURL(file);
+
+            if (file.type.includes("video")) {
+
+                //dispose of any current video element
+                if (this.curVideoElement) {
+                    this.#cleanUpVideo(this.curVideoElement);
+                }
+
+                //create new video element and set its source to the generated blobURL
+                this.curVideoElement = this.#createNewVideoElement(blobURL);
+
+                //reference the demo DeviceMesh and update it's video content
+                this.demoDeviceMesh.updateScreenTextureVideo(this.curVideoElement, undefined, true);
+
+                setTimeout(() => {
+                    this.curVideoElement.play();
+                },1000)
+               
+            }else{
+
+                this.demoDeviceMesh.updateScreenTextureImage(blobURL,undefined,false);
+            }
+            
+        },"EngineManagerDefault")
+
+        //store reference to the panel for later reference, as necessary.
+        this.dragAndDropPanel = dragAndDropPanel;
+
+    }
+
+    #createNewVideoElement(src) {
+        const videoElement = document.createElement('video');
+
+        // Set the video element to be hidden
+        videoElement.style.display = 'none';
+
+        // Assign a source to the video element
+        const videoSource = document.createElement('source');
+        videoSource.src = src;  // Replace with your video URL or file path
+        videoSource.type = 'video/mp4';  // Set the appropriate video type
+        videoElement.appendChild(videoSource);
+
+        // Append the video element to the body or desired container
+        document.body.appendChild(videoElement);
+
+        // Optionally, load the video
+        videoElement.load();
+
+       
+
+        return videoElement;
+    }
+
+
+    #cleanUpVideo(videoElement) {
+        // Stop the video playback
+        videoElement.pause();
+        
+        // Remove the video source
+        videoElement.removeAttribute('src');
+        
+        // Unload the video data
+        videoElement.load(); // This will clear the currently loaded video
+        
+        // Remove event listeners (if any were added)
+        const clonedElement = videoElement.cloneNode(true);  // This clones without event listeners
+        videoElement.parentNode.replaceChild(clonedElement, videoElement);
+    
+        // Remove the video element from the DOM
+        if (clonedElement.parentNode) {
+            clonedElement.parentNode.removeChild(clonedElement);
+        }
+    
+        // Dereference the element to release memory
+        videoElement = null;
+    }
+    
 
     
 

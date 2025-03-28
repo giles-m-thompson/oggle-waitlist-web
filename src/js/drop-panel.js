@@ -101,11 +101,10 @@ change the text of the dragFile element. */
 dropArea.addEventListener("dragover", (event) => {
   event.preventDefault(); //preventing from default behaviour
 
-  const dragAndDropContents = document.getElementById("drag-and-drop-default");
-  dragAndDropContents.classList.add("hide-panel");
+ 
+  clearPanel();
 
   const dragAndDropContentsDragging = document.getElementById("drag-and-drop-dragging");
-  dragAndDropContentsDragging.classList.add("show-panel");
   dragAndDropContentsDragging.style.opacity = 1;
 });
 
@@ -120,7 +119,7 @@ dropArea.addEventListener("dragleave", (event) => {
   dragAndDropContentsDragging.style.opacity = 0;
 
   const dragAndDropContents = document.getElementById("drag-and-drop-default");
-  dragAndDropContents.classList.remove("hide-panel")
+  dragAndDropContents.style.opacity = 1;
 
 });
 
@@ -177,8 +176,6 @@ const setttingFileValue = (target) => {
   const fileSize = target.files[0].size;
   const fileType = target.files[0].type.split("/").pop(); //fetching only the part after slash
 
-  let filesizeErrorMessage = document.getElementById("filesize-error");
-  let filetypeErrorMessage = document.getElementById("filetype-error");
 
   /* This is checking the file size. If the file size is greater than 5mb, it will show an error
     message. */

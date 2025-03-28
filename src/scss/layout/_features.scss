@@ -130,6 +130,12 @@ svg.bendtext text {
 
 /** Drag & Drop styles*/
 
+#o3d-demo-dragdrop-panel{
+	position: relative;
+	left:9px;
+	bottom:2px;
+}
+
 #o3d-demo-drag-and-drop-panel{
 	position: relative;
 	left:-270px;
@@ -172,7 +178,7 @@ svg.bendtext text {
 #pan-prompt{
 	position: relative;
 	bottom:290px;
-	left:198px;
+	left:205px;
 }
 
 #pan-prompt img{

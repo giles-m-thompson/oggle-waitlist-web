@@ -38,14 +38,18 @@ class ColorEditor{
      * listener at a later time, as necessary.
      */
     registerColorChangeEventListener(listener,id){
+        if(!this.isInitialised())
+            throw new Error("The component has not been initialised yet.");
         this.listeners.set(id,listener);
     }
 
     /** Unregisters a previously registered color change listener.
      * @returns {boolean} True where a listener was actually removed, FALSE otherwise.
      */
-    unRegisterColorChangeEventListener(listenrId){
-        return this.listeners.delete(listenrId);
+    unRegisterColorChangeEventListener(listenerId){
+        if(!this.isInitialised())
+            throw new Error("The component has not been initialised yet.");
+        return this.listeners.delete(listenerId);
     }
 
 
