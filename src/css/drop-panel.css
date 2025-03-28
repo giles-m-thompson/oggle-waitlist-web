@@ -216,6 +216,7 @@
 
   #drag-and-drop-default{
     transition: opacity 0.5s ease-in-out;
+    z-index: 1003;
  
   }
 
