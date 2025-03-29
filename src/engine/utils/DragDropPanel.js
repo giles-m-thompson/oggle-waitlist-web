@@ -68,11 +68,16 @@ class DragDropPanel{
         dragAndDropDefault.id = 'drag-and-drop-default';
 
         // Icon
+        const iconWrapper = document.createElement('div');
+        iconWrapper.classList.add('gradient-icon-wrapper'); // Add the gradient class
         const defaultIcon = document.createElement('i');
-        defaultIcon.classList.add('fa-solid', 'fa-cloud-arrow-up', 'fa-bounce');
+        defaultIcon.classList.add('fa','fa-solid', 'fa-cloud-arrow-up','fa-bounce');
         defaultIcon.style.fontSize = '66px';
-        defaultIcon.style.color = '#535FD7';
-        dragAndDropDefault.appendChild(defaultIcon);
+        //defaultIcon.style.color = '#535FD7';
+
+        iconWrapper.appendChild(defaultIcon);
+        //dragAndDropDefault.appendChild(defaultIcon);
+        dragAndDropDefault.appendChild(iconWrapper);
 
         // Header for default state
         const defaultHeader = document.createElement('header');
@@ -85,7 +90,7 @@ class DragDropPanel{
 
         // Button
         const defaultButton = document.createElement('button');
-        defaultButton.classList.add('px-2', 'py-1', 'text-beige', 'bg-violet-400', 'rounded-full', 'file-input-button');
+        defaultButton.classList.add('px-2', 'py-1', 'bg-violet-400', 'rounded-full', 'file-input-button');
         defaultButton.textContent = 'select';
         defaultHeader.appendChild(defaultButton);
         defaultHeader.append(' a file.');
@@ -114,7 +119,7 @@ class DragDropPanel{
 
         // Icon for dragging state
         const draggingIcon = document.createElement('i');
-        draggingIcon.classList.add('fa-solid', 'fa-cloud-arrow-up', 'fa-beat-fade');
+        draggingIcon.classList.add('fa','fa-solid', 'fa-cloud-arrow-up', 'fa-beat-fade');
         draggingIcon.style.fontSize = '66px';
         draggingIcon.style.color = '#535FD7';
         dragAndDropDragging.appendChild(draggingIcon);

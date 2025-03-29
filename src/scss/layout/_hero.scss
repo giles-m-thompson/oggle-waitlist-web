@@ -75,6 +75,10 @@
 	box-shadow: 1px -6px 48px rgba(255, 255, 255, 0.85);
 }
 
+.gradient-button{
+	background: -webkit-linear-gradient(200deg,#cf56ea,#7e38f6,#607ffa,#25b8f7);
+}
+
 @include media( '<medium' ) {
 
 	.hero-cta {

@@ -115,6 +115,11 @@
     color:rgb(255, 223, 185);
     font-weight: 500;
   }
+
+  .text-blue {
+    color:rgb(255, 223, 185);
+    font-weight: 500;
+  }
   
   /* Border Styles */
   .border-2 {
@@ -141,6 +146,7 @@
   /* Button Colors */
   .bg-violet-400 {
     background-color: #535FD7;
+    background: -webkit-linear-gradient(45deg,#cf56ea,#7e38f6,#607ffa);
   }
   
   .bg-violet-600 {
