@@ -1,6 +1,10 @@
 .features-wrap {
-	max-width: 540px;
+	position: relative;
+	max-width: 600px;
 	margin: 0 auto;
+	bottom: 510px;
+	left:190px;
+	margin-bottom: -530px;
 }
 
 .features-image {
@@ -197,7 +201,7 @@ svg.bendtext text {
 
 	color: #9c47fc;
 	display: block;
-	background: -webkit-linear-gradient(280deg,#cf56ea,#7e38f6,#607ffa); 
+	background: -webkit-linear-gradient(280deg,#cf56ea,#7e38f6,#607ffa,#25b8f7); 
 	/*background: -webkit-linear-gradient(180deg,#cf56ea,#7e38f6,#607ffa,#25b8f7);*/
 	-webkit-background-clip: text;
 	background-clip: text;
@@ -242,6 +246,8 @@ svg.bendtext text {
 
 	.feature {
 		text-align: left;
+		position: relative;
+		right: 150px;
 	}
 
 	.feature-inner {

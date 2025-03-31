@@ -25,10 +25,10 @@
     
     background: -webkit-linear-gradient(
         left,
-        #0ff 0%,
+        #25b8f7 0%,
         #cf56ea 25%,
         #535FD7 50%,
-        #0ff 100%
+        #25b8f7 100%
       )
       repeat;
     -webkit-background-clip: text;
