@@ -325,7 +325,7 @@ class EngineManager {
                             "name": "iphone-13-pro#1",
                             "type": "Device",
                             "bodySubmeshName": "Body_Body_0_12",
-                            "bodyMaterialName": "Body",
+                            "bodyMaterialName": ["Body","Camera_Frame.001"],
                             "screenSubmeshName": "Object_25",
                             "screenMaterialName": "Wallpaper",
                             "additionalScreenSubmeshes": [],
@@ -437,7 +437,10 @@ class EngineManager {
         screenMaterial.reflectionColor = new BABYLON.Color3(0.5, 0.5, 0.5); 
 
         //reduce reflectivity on the body material
-        const bodyMaterial = this.scene.getMaterialByName(mesh.getBodyMaterialName());
+        const bodyMaterial = (Array.isArray(mesh.getBodyMaterialName())) 
+        ? this.scene.getMaterialByName(mesh.getBodyMaterialName()[0])
+        : this.scene.getMaterialByName(mesh.getBodyMaterialName());
+
         bodyMaterial.reflectionColor = new BABYLON.Color3(0.7, 0.7, 0.7); 
 
         //disable the device's, additional highly reflective screen

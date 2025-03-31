@@ -64,6 +64,11 @@ class DeviceMesh extends O3DMesh{
         this.initialised = false;
         this.cachedScreenMaterial = null; //used to cache screen material;
         this.meshHierarchyInSizeOrder = [];
+         /** @type {Map}*/
+        this.bodyColourChangeMap = null;
+
+        /** @type {Map}*/
+        this.bodyColourValuesMap = null;
 
         //optional cache of main device submeshes that are used frequently in this
         //class. Once initialised by any method they can be reused.
@@ -184,17 +189,129 @@ class DeviceMesh extends O3DMesh{
      * @author Giles Thompson
      *
      * @param {string} newColour A hash-encoded colour value.
+     * @param {BABYLON.Material[]} materialNames The specific material(s) to apply the specified colour to, only used internally
+     *                                       to apply the material to a series of materials. Where multiple body materials
+     *                                       are required to be updated on the mesh.
+     * @param {int[]} 
      */
-    updateBodyColour(newColour){
+    updateBodyColour(newColour, materialNames = null) {
         this.#verifyInitialised();
 
-        const bodyMaterial = this.scene.getMaterialById(this.bodyMaterialName);
+        if (Array.isArray(this.bodyMaterialName)) {
 
-        if(bodyMaterial){
-            this.bodyColour = BABYLON.Color3.FromHexString(newColour);
-            bodyMaterial.albedoColor = this.bodyColour;
-        }else{
-            throw new Error(`Update of body colour failed; unable to find body material with id: ${this.bodyMaterialName}`);
+            //where the multiple body materials have been defined for the mesh but
+            //the materialNames have not been specified, as would be the case if 
+            //this is the top-level method call, copy the body material names into an array.
+            if (materialNames == null) {
+                materialNames = [...this.bodyMaterialName]
+
+                //Build colour map, will be used to compute the ratios between various body colours
+                if(!this.bodyColourChangeMap){
+
+                    this.bodyColourChangeMap = new Map();
+                    this.bodyColourValuesMap = new Map();
+
+                    materialNames.forEach((materialName) => {
+                        const bodyMaterial = this.scene.getMaterialById(materialName);
+                        this.bodyColourChangeMap.set(materialName,bodyMaterial);
+                        this.bodyColourValuesMap.set(materialName,bodyMaterial.albedoColor);
+                    })
+                }
+            }
+
+
+            if (materialNames.length > 0) {
+
+                //remove the first material from the array..
+                const curMaterialName = materialNames.shift();
+
+                //obtain the material from our body colour change map
+                const bodyMaterial = this.bodyColourChangeMap.get(curMaterialName);
+
+                //where we've found it update it...
+                if (bodyMaterial) {
+
+                    //if this is the base body material, which should ALWAYS be specified
+                    //first in the bodyMaterialName array then we may directly set the colour
+                    if(curMaterialName == this.bodyMaterialName[0]){
+                        this.bodyColour = BABYLON.Color3.FromHexString(newColour);
+                        bodyMaterial.albedoColor = this.bodyColour;
+                    }else{
+
+                        //otherwise we will need to compute the delta between the original base body colour
+                        //and the original colour of the current material. We may then apply this delta
+                        //to the "newColour" in order to derive what the new colour of the curent material should be..
+
+                        //original base body color3
+                        const originalBaseBodyColour3 = this.bodyColourValuesMap
+                                                            .get(this.bodyMaterialName[0])
+                                                          
+
+                        //original base body RGB
+                        const originalBaseBodyRGB = this.#color3ToRgbGamma(originalBaseBodyColour3);
+
+
+                        //current material color3.
+                        const originalCurMaterialColour3 = this.bodyColourValuesMap
+                                                               .get(curMaterialName);
+
+                        //current material RGB
+                        const originalCurMaterialRGB = this.#color3ToRgbGamma(originalCurMaterialColour3);
+
+
+                        //compute delta array for the current material
+                        const deltaArr = [
+                            //originalCurMaterialRGB[0] - originalBaseBodyRGB[0],
+                            //originalCurMaterialRGB[1] - originalBaseBodyRGB[1],
+                            //originalCurMaterialRGB[2] - originalBaseBodyRGB[2]
+                            originalCurMaterialRGB[0]  / originalBaseBodyRGB[0],
+                            originalCurMaterialRGB[1]  / originalBaseBodyRGB[1],
+                            originalCurMaterialRGB[2]  / originalBaseBodyRGB[2]
+                        ]
+
+
+                        //get the NEW base body color3 value (i.e would have been set on recursive call further up the stack)
+                        //and convert it to an rgb value
+                        let newColourRGB = this.#color3ToRgbGamma(this.bodyColour)
+
+                        //increment each component of the new colour of the base body material (by the delta) to arrive at
+                        //the new colour that should be applied to the current material
+                        const newCurrentMaterialColourRGB = [ 
+                            Math.min(newColourRGB[0] * deltaArr[0],255),
+                            Math.min(newColourRGB[1] * deltaArr[1],255),
+                            Math.min(newColourRGB[2] * deltaArr[2],255),
+                        ]
+
+                        //convert the new colour for the material from an RGB to Color3 value...
+                        const newCurrentMaterialColor3 = this.#rgbGammaToColor3(newCurrentMaterialColourRGB);
+
+                        //finally update the current material color
+                        bodyMaterial.albedoColor = newCurrentMaterialColor3;   
+                        
+
+                    }
+
+                   
+                } else {
+                    throw new Error(`Update of body colour failed; unable to find body material with id: ${this.bodyMaterialName}`);
+                }
+
+                //recursively call ourselves to process the remaining material names in the array.
+                this.updateBodyColour(newColour, materialNames);
+            }
+
+
+        } else {
+
+            const bodyMaterial = this.scene.getMaterialById(this.bodyMaterialName);
+
+            if (bodyMaterial) {
+                this.bodyColour = BABYLON.Color3.FromHexString(newColour);
+                bodyMaterial.albedoColor = this.bodyColour;
+            } else {
+                throw new Error(`Update of body colour failed; unable to find body material with id: ${this.bodyMaterialName}`);
+            }
+
         }
 
     }
@@ -460,9 +577,14 @@ class DeviceMesh extends O3DMesh{
      * @param {HTMLVideoElement} aVideoElement The video element to update to the device screen.
      * @param {boolean} showLoadingScreen Optional, where set to true and the loading screen is enabled for the mesh instance,
      *                                    a loading sequence will be displayed before the screen is updated.
+     * @param {boolean} flipScreenVerticalOrientation Optional, flips the vertical orientation of the screen, may be necessary
+     *                                                for certain models depending on the 3D Software they were exported from.
+     * @param {boolean} flipScreenHorizontalOrientation Optional, flips the horizontal orientation of the screen, may be necessary
+     *                                                 for certain models depending on the 3D Software they were exported from.
      */
-    updateScreenTextureVideo(aVideoElement,showLoadingScreen = false,flipScreenVerticalOrientation = false){
+    updateScreenTextureVideo(aVideoElement,showLoadingScreen = false,flipScreenVerticalOrientation = false, flipScreenHorizontalOrientation = false){
         this.#verifyInitialised();
+
 
         //obtain screen material.
         const screenMaterial = this.scene.getMaterialById(this.screenMaterialName);
@@ -494,6 +616,9 @@ class DeviceMesh extends O3DMesh{
             if(flipScreenVerticalOrientation){
                 newVideoTexture.vScale = -1;
             }
+            if(flipScreenHorizontalOrientation){
+                newVideoTexture.uScale = -1;
+            }
             this.#hideBackScreen(500);
 
         }
@@ -512,6 +637,11 @@ class DeviceMesh extends O3DMesh{
      * @param {string} anImageURL The URL of the image to update to the device screen.
      * @param {boolean} [showLoadingScreen=false] Flag which indicates whether the loading screen should be
      *                                            displayed on update of the screen, it isn't by default.
+     * 
+     *  @param {boolean} flipScreenVerticalOrientation Optional, flips the vertical orientation of the screen, may be necessary
+     *                                                 for certain models depending on the 3D Software they were exported from.
+     * @param {boolean} flipScreenHorizontalOrientation Optional, flips the horizontal orientation of the screen, may be necessary
+     *                                                  for certain models depending on the 3D Software they were exported from.
      */
     updateScreenTextureImage(anImageURL,showLoadingScreen = false,flipScreenVerticalOrientation = false){
         this.#verifyInitialised();
@@ -547,15 +677,10 @@ class DeviceMesh extends O3DMesh{
             if(flipScreenVerticalOrientation){
                 imgTexture.vScale = -1;
             }
+            if(flipScreenHorizontalOrientation){
+                imgTexture.uScale = -1;
+            }
             this.#hideBackScreen(500);
-
-            //const imgTexture = new BABYLON.Texture("./src/engine/img/black-screen-with-reflection-dark.png", this.scene);
-            
-
-            ////apply the image texture to the cloned screen mesh.
-            //clonedDeviceScreenSubMesh.material.albedoTexture = imgTexture;
-            //clonedDeviceScreenSubMesh.material.unlit = true;
-            //clonedDeviceScreenSubMesh.visibility = 0;  
             
 
         }
@@ -639,8 +764,63 @@ class DeviceMesh extends O3DMesh{
         const screenMaterial = this.scene.getMaterialById(this.screenMaterialName);
         screenMaterial.albedoTexture.unlit = true;
         screenMaterial.diffuseColor = new BABYLON.Color3(1.5, 1.5, 1.5);
-        console.log(screenMaterial.albedoTexture)
+        
 
+    }
+
+    #color3ToRgbGamma(color) {
+        // Convert from linear space to gamma space
+        const r = Math.round(Math.pow(color.r, 1 / 2.2) * 255);
+        const g = Math.round(Math.pow(color.g, 1 / 2.2) * 255);
+        const b = Math.round(Math.pow(color.b, 1 / 2.2) * 255);
+    
+        return [r, g, b];  // Return RGB values in gamma space
+    }
+
+    #hexToRgb(hex) {
+        // Remove the hash symbol if present
+        hex = hex.replace(/^#/, '');
+    
+        // Ensure it's a valid 6-character hex code
+        if (hex.length === 6) {
+            // Parse the string into red, green, and blue components
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+    
+            const rgbArr = [r,g,b];
+            return rgbArr;
+            //return `rgb(${r}, ${g}, ${b})`;
+        } else {
+            throw new Error("Invalid hex color format. Must be in the form '#RRGGBB' or 'RRGGBB'.");
+        }
+    }
+
+    #color3ToRgb(color) {
+        // Convert the color3 values (0 to 1) to RGB values (0 to 255)
+        const r = Math.round(color.r * 255);
+        const g = Math.round(color.g * 255);
+        const b = Math.round(color.b * 255);
+        
+        return [r,g,b];
+    }
+
+    #rgbGammaToColor3(rgbGammaValues) {
+        // Extract r, g, b from the array
+        const [r, g, b] = rgbGammaValues;
+    
+        // Normalize the RGB values (0-255) to the range 0-1
+        const normalizedR = r / 255;
+        const normalizedG = g / 255;
+        const normalizedB = b / 255;
+    
+        // Apply gamma correction (convert from gamma space to linear space)
+        const linearR = Math.pow(normalizedR, 2.2);
+        const linearG = Math.pow(normalizedG, 2.2);
+        const linearB = Math.pow(normalizedB, 2.2);
+    
+        // Return the new Color3 object in linear space
+        return new BABYLON.Color3(linearR, linearG, linearB);
     }
 
     #detectMediaMimeTypeFromURL(aMediaURL,staticTest) {
