@@ -22,7 +22,7 @@
 
 
 </head>
-<body class="is-boxed has-animations">
+<body id="page-body" class="is-boxed has-animations" style="opacity: 0;  transition: opacity 0.5s ease-in-out;">
     <div class="body-wrap boxed-container">
         <header class="site-header">
             <div class="container">
@@ -84,7 +84,9 @@
 							</div>
 							<div class="hero-media-container">
 								<img class="hero-media-image asset-light" src="src/images/hero-media-light.svg" alt="Hero media">
-								<video id="hero-vid" class="hero-media-image asset-dark is-moving-object is-rotating" src="src/videos/oggle-web-promo-smaller-cropped.mp4" alt="oggle video demo" autoPlay loop muted></video>
+                                <p id="hero-loading-text" style="position: relative; z-index:1008; top:190px; left:250px" class="is-moving-object is-rotating">Loading...</p>
+								<video id="hero-vid" class="hero-media-image asset-dark is-moving-object is-rotating" src="" alt="oggle video demo" autoPlay loop muted></video>
+                                
 							</div>
 						</div>
                     </div>
@@ -243,7 +245,22 @@
             </div>
         </footer>
     </div>
+
+    <script>
+
+         //display page body once everything is loaded
+         window.addEventListener('load',  () => {
+
+            const pageBody = document.getElementById("page-body");
+            pageBody.style.opacity = 100;
+
+         });
+   
+    </script>
+
     <script type="module" src="/src/js/main.js"></script>
+
+    <script type="module" src="./src/js/video-lazyload.js"></script>
 
     <script type="module">
 
