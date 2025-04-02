@@ -1,0 +1,122 @@
+.modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.4rem;
+    width: 450px;
+    padding: 1.3rem;
+    min-height: 250px;
+    position: fixed; /* Fixed position ensures it stays centered even if the parent has a different display type */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centers the modal precisely */
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Optional: Adds a shadow for better visibility */
+    z-index: 2008; /* Ensures it stays on top */
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    
+  }
+  
+  .modal .flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .modal input {
+    padding: 0.7rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.9em;
+  }
+  
+  .modal p {
+    font-size: 0.9rem;
+    color: #777;
+    margin: 0.4rem 0 0.2rem;
+  }
+  
+  button {
+    cursor: pointer;
+    border: none;
+    font-weight: 600;
+  }
+  
+  .modal .btn {
+    display: inline-block;
+    padding: 0.8rem 1.4rem;
+    font-weight: 700;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1em;
+  }
+
+  .modal .btn:hover{
+    background: -webkit-linear-gradient(45deg,#cf56ea,#7e38f6,#607ffa,#25b8f7);
+    
+  }
+  
+  .btn-open {
+    position: absolute;
+    bottom: 150px;
+  }
+  
+  .btn-close {
+    transform: translate(10px, -20px);
+    padding: 0.5rem 0.7rem;
+    background: #eee;
+    border-radius: 50%;
+    line-height: 20px;
+
+  }
+
+  .title{
+    font-size: 16pt !important;
+    color: black !important;
+    font-weight: 800;
+    text-align: center;
+  }
+
+ 
+
+  .overlay  {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    z-index: 2007 !important;
+    
+  }
+
+  .hidden{
+    display: none;
+  }
+
+  #success_modal_img{
+    position: relative;
+    /*
+    height: 130px;
+    left:130px
+    */
+    margin: auto;
+    width:50%;
+
+  }
+
+  #regEmailError{
+    color: rgb(240, 101, 101) !important;
+    text-align: center;
+    font-size: 12pt !important;
+    font-weight: 800;
+
+  }
