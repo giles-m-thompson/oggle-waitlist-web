@@ -313,11 +313,15 @@
                 const pageBody = document.getElementById("page-body");
                 pageBody.style.opacity = 100;
 
+               //lower z-index of loading screen to allow click/touch events to pass through
                 setTimeout(() => {
-
                     loadingScreen.style.zIndex = 0;
-
                 },1000)
+
+                //next complete remove the loading screen from the dom.
+                setTimeout(() => {
+                    loadingScreen.style.display = "none";
+                },2500)
                 
 
             },1000)

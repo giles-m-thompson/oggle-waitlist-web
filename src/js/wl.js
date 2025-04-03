@@ -107,11 +107,15 @@ regEmailField.addEventListener('keydown', () => {
 //early access button is clicked...
 heroEarlyAccessBtn.addEventListener('click',() => {
 
-    document.getElementById("cta-section").scrollIntoView({ 
-        behavior: "smooth" 
-    })
+    setTimeout(() => {
+        document.getElementById("cta-section").scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+        });
+   }, 100);
+    
 
-})
+});
 
 
 
