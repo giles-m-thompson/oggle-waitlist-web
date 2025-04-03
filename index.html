@@ -312,6 +312,12 @@
                 //loading
                 const pageBody = document.getElementById("page-body");
                 pageBody.style.opacity = 100;
+
+                setTimeout(() => {
+
+                    loadingScreen.style.zIndex = 0;
+
+                },1000)
                 
 
             },1000)
