@@ -6,8 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Oggle - Early Access Program</title>
     
-      <!-- for drag and drop. -->
+    <!-- loading indicator -->
+    <script src="https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js"></script>
+    <link rel="stylesheet" href="./src/css/loading-bar.css">
+    <!--
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@latest/pace-theme-default.min.css">
+    -->
      
+
+
     <link href="https://fonts.googleapis.com/css2?family=Condiment&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Heebo:400,700|IBM+Plex+Sans:600" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -15,6 +22,7 @@
     <link rel="stylesheet" href="src/css/wordscroll.css">
     <link rel="stylesheet" href="src/css/text-sparkle.css">
     <link rel="stylesheet" href="src/css/drop-panel.css">
+    <link rel="stylesheet" href="src/css/loading.scss">
     <link rel="stylesheet" href="src/css/modal.css">
 
     <script src="https://unpkg.com/scrollreveal@4.0.0/dist/scrollreveal.min.js"></script>
@@ -26,6 +34,7 @@
 </head>
 <body class="is-boxed has-animations">
     <div class="overlay hidden"></div>
+    <div class="loading"></div>
     <div class="body-wrap boxed-container" style="transition: opacity 1s ease-in-out; opacity: 0" id="page-body">
         <header class="site-header">
             <div class="container">
@@ -296,8 +305,22 @@
          //display page body once everything is loaded
          window.addEventListener('load',  () => {
 
-            const pageBody = document.getElementById("page-body");
-            pageBody.style.opacity = 100;
+            
+
+            //display the main (now loaded) content after a short delay
+            setTimeout(() => {
+
+                //first hide loading screen
+                const loadingScreen = document.querySelector(".loading");
+                loadingScreen.style.opacity = 0;
+
+                //loading
+                const pageBody = document.getElementById("page-body");
+                pageBody.style.opacity = 100;
+                
+
+            },1000)
+           
 
          });
    
