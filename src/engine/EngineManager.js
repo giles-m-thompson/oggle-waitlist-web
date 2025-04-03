@@ -445,7 +445,6 @@ class EngineManager {
 
         //disable the device's, additional highly reflective screen
         const screenGlassMesh = this.scene.getMeshByName("Object_43");
-        console.log(screenGlassMesh.material)
         screenGlassMesh.setEnabled(false);
 
         //increase the opacity and reflectivity of the camera lens glass
